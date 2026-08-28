@@ -10,9 +10,9 @@ export const examRoute = createRoute({
   beforeLoad: () => {
     const s = getPlannerState()
     if (s.versions.length === 0) {
-      throw redirect({ to: s.generation.phase === "idle" ? "/brief" : "/plan" })
+      throw redirect({ to: s.generation.phase === "idle" ? "/zalozenia-lekcji" : "/plan-lekcji" })
     }
   },
-  path: "/exam",
+  path: "/sprawdzian",
   component: ExamScreen,
 })

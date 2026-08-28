@@ -223,7 +223,6 @@ function BlockSheetContent({
               </div>
             ) : (
               <Chip
-                showCheck={false}
                 className="mt-1.5"
                 aria-label={`Metoda: ${method}. Zmień`}
                 onClick={() => setOpenPicker("method")}
@@ -253,7 +252,6 @@ function BlockSheetContent({
               </div>
             ) : (
               <Chip
-                showCheck={false}
                 className="mt-1.5"
                 aria-label={`Forma pracy: ${form}. Zmień`}
                 onClick={() => setOpenPicker("form")}

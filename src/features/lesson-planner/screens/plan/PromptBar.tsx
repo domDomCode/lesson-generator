@@ -81,7 +81,7 @@ export function PromptBar({ planId }: { planId: PlanId }) {
             </>
           )}
         </div>
-        <Button size="lg" className="w-full" onClick={() => navigate({ to: "/exam" })}>
+        <Button size="lg" className="w-full" onClick={() => navigate({ to: "/sprawdzian" })}>
           Przejdź do sprawdzianu
         </Button>
       </div>

@@ -1,22 +1,18 @@
 import * as React from "react"
-import { Check } from "lucide-react"
-
 import { cn } from "@/shared/lib/utils"
 
 /**
  * Selectable pill — the app's main input control (class, duration, goals,
- * preferences, exam scope). 44px tall: comfortably tappable one-handed.
- * Selection is communicated by colour AND the check mark, not colour alone.
+ * preferences). 44px tall: comfortably tappable one-handed. Selection is
+ * communicated by colour and weight only — no icon, so toggling never
+ * shifts the layout; aria-pressed carries the state for AT.
  */
 function Chip({
   className,
   selected = false,
-  showCheck = true,
   ...props
 }: React.ComponentProps<"button"> & {
   selected?: boolean
-  /** Hide the check for chips acting as plain toggles/links. */
-  showCheck?: boolean
 }) {
   return (
     <button
@@ -27,13 +23,12 @@ function Chip({
         "inline-flex h-11 shrink-0 items-center gap-1.5 rounded-full border px-4 text-sm font-medium transition-colors select-none",
         "outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:translate-y-px disabled:pointer-events-none disabled:opacity-50",
         selected
-          ? "border-primary/60 bg-primary/10 text-primary"
+          ? "border-primary/60 bg-primary/10 font-semibold text-primary"
           : "border-border bg-card text-foreground hover:bg-muted",
         className
       )}
       {...props}
     >
-      {selected && showCheck && <Check className="size-4" aria-hidden />}
       {props.children}
     </button>
   )

@@ -6,14 +6,20 @@
 
 import * as React from "react"
 
+import { useIsMobile } from "@/shared/hooks/use-mobile"
 import { cn } from "@/shared/lib/utils"
 
 import type { BudgetSummary } from "../../model/budget"
 import { useActiveBlockId } from "../../state/active-block"
 import type { TimeBudgetBarProps } from "../contracts"
 
-/** Permanent right-hand gutter overflow can extend into — nothing reflows. */
-const GUTTER_PX = 56
+/**
+ * Permanent right-hand gutter overflow can extend into — nothing reflows.
+ * Narrower on mobile, where every horizontal pixel next to the counter
+ * counts; overflow past the smaller gutter just clamps and fades sooner.
+ */
+const GUTTER_DESKTOP_PX = 56
+const GUTTER_MOBILE_PX = 28
 /** Segments narrower than this hide their minutes digit. */
 const MIN_LABEL_PX = 18
 
@@ -89,21 +95,23 @@ export function TimeBudgetBar({
     }
   }, [disabled, hasSegments, entered])
 
+  const isMobile = useIsMobile()
   const pxPerMinute = budget.lessonMinutes > 0 ? trackPx / budget.lessonMinutes : 0
   const totalPx = Math.round(budget.totalMinutes * pxPerMinute)
   const showSegments = !disabled && hasSegments
   const overflowing = budget.state === "overflow"
-  const clampedEndPx = Math.min(totalPx, trackPx + GUTTER_PX)
-  const overflowClipped = totalPx > trackPx + GUTTER_PX
+  const gutterPx = isMobile ? GUTTER_MOBILE_PX : GUTTER_DESKTOP_PX
+  const clampedEndPx = Math.min(totalPx, trackPx + gutterPx)
+  const overflowClipped = totalPx > trackPx + gutterPx
 
   return (
     <div role="group" aria-label="Budżet czasu lekcji" className="w-full select-none">
       <div className="flex items-end gap-3">
         {/* Clip wrapper: its right padding IS the gutter, so segments may
-            extend into it and are hard-clipped exactly at trackPx + GUTTER_PX. */}
+            extend into it and are hard-clipped exactly at trackPx + gutterPx. */}
         <div
           className="min-w-0 flex-1 overflow-hidden pt-5"
-          style={{ paddingRight: GUTTER_PX }}
+          style={{ paddingRight: gutterPx }}
         >
           <div ref={trackRef} className="relative h-7">
             {/* Base track — the lesson itself. Full grey while generating. */}

@@ -3,11 +3,11 @@
 // konfiguracją, która pozostaje edytowalna do ponownego wygenerowania.
 
 import { useDeferredValue, useEffect, useRef, useState } from "react"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/react-router"
 import { ArrowLeft, Download, LoaderCircle } from "lucide-react"
 
-import { generateExam, getChapters } from "../../data/api"
+import { generateExam } from "../../data/api"
 import type { ExamDifficulty, ExamGenerateRequest } from "../../model/types"
 import { dispatch, usePlannerStore } from "../../state/store"
 import { Button } from "@/shared/ui/button"
@@ -37,21 +37,6 @@ export function ExamScreen() {
   // Ten ekran jest właścicielem konfiguracji aż do wygenerowania.
   const [counts, setCounts] = useState<ExamCounts>({ ...DEFAULT_COUNTS })
   const [difficulty, setDifficulty] = useState<ExamDifficulty>("medium")
-  const [selectedChapterIds, setSelectedChapterIds] = useState<string[]>(() => [
-    ...brief.chapterIds,
-  ])
-
-  // Zakres: rozdziały z briefu (podręcznik) albo temat własny bez zapytania.
-  const textbookId = brief.topicSource === "textbook" ? brief.textbookId : null
-  const chaptersQuery = useQuery({
-    queryKey: ["chapters", textbookId],
-    queryFn: () => getChapters(textbookId as string),
-    enabled: textbookId != null && brief.chapterIds.length > 0,
-  })
-  const briefChapters = (chaptersQuery.data ?? []).filter((c) =>
-    brief.chapterIds.includes(c.id)
-  )
-
   // Żywy szacunek — przelicza się przy każdej zmianie; odroczona wartość
   // utrzymuje płynność przy szybkim klikaniu steperów.
   const estimate = estimateExam(counts)
@@ -84,7 +69,6 @@ export function ExamScreen() {
   if (!doc) return null // Route guard nie wpuszcza tu bez planu.
 
   const versionLabel = versions.find((v) => v.id === activeVersionId)?.label ?? "v1"
-  const showTopicChip = textbookId == null || brief.chapterIds.length === 0
 
   function handleGenerate() {
     if (!activeVersionId || generate.isPending) return
@@ -92,14 +76,9 @@ export function ExamScreen() {
       versionId: activeVersionId,
       counts: { ...counts },
       difficulty,
-      chapterIds: selectedChapterIds,
+      // Zakres = wszystkie rozdziały z briefu (sekcja wyboru usunięta).
+      chapterIds: brief.chapterIds,
     })
-  }
-
-  function toggleChapter(id: string) {
-    setSelectedChapterIds((ids) =>
-      ids.includes(id) ? ids.filter((x) => x !== id) : [...ids, id]
-    )
   }
 
   return (
@@ -107,7 +86,7 @@ export function ExamScreen() {
       {/* Sprzęg z krokiem Plan: skąd pochodzi ten sprawdzian. */}
       <button
         type="button"
-        onClick={() => navigate({ to: "/plan" })}
+        onClick={() => navigate({ to: "/plan-lekcji" })}
         className="group -mx-1 flex min-h-11 items-center rounded-full px-1 outline-none focus-visible:ring-3 focus-visible:ring-ring/50 active:translate-y-px"
       >
         <InfoChip className="pointer-events-none gap-1.5 transition-colors group-hover:bg-secondary group-hover:text-foreground">
@@ -155,42 +134,6 @@ export function ExamScreen() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Zakres</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {showTopicChip ? (
-              <InfoChip>{doc.topic}</InfoChip>
-            ) : chaptersQuery.isPending ? (
-              <div className="flex flex-wrap gap-2" aria-label="Wczytuję rozdziały">
-                <span className="h-11 w-36 animate-pulse rounded-full bg-muted" />
-                <span className="h-11 w-28 animate-pulse rounded-full bg-muted" />
-              </div>
-            ) : chaptersQuery.isError ? (
-              <div className="flex flex-wrap items-center gap-2">
-                <p className="text-sm text-muted-foreground">
-                  Nie udało się wczytać rozdziałów.
-                </p>
-                <Button variant="outline" size="sm" onClick={() => chaptersQuery.refetch()}>
-                  Spróbuj ponownie
-                </Button>
-              </div>
-            ) : (
-              <div className="flex flex-wrap gap-2">
-                {briefChapters.map((chapter) => (
-                  <Chip
-                    key={chapter.id}
-                    selected={selectedChapterIds.includes(chapter.id)}
-                    onClick={() => toggleChapter(chapter.id)}
-                  >
-                    {chapter.title}
-                  </Chip>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
       </div>
 
       {exam && <ExamPreview exam={exam} ref={previewRef} />}

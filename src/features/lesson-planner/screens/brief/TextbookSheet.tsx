@@ -25,7 +25,7 @@ export function TextbookSheet({ open, onOpenChange, onSelect }: TextbookSheetPro
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
-        className="h-[75svh]"
+        className="h-[75svh] md:h-[560px]"
         onOpenAutoFocus={(event) => {
           event.preventDefault()
           inputRef.current?.focus()

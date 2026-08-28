@@ -13,11 +13,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/sha
 import { Chip, InfoChip } from "@/shared/ui/chip"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/shared/ui/collapsible"
 import { Input } from "@/shared/ui/input"
+import {
+  Sheet,
+  SheetBody,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/shared/ui/sheet"
 import { Textarea } from "@/shared/ui/textarea"
 
 import { startGeneration } from "../../data/generation"
 import { useChapters, useTextbook } from "../../data/textbooks"
-import type { Brief, LessonGoal, Textbook } from "../../model/types"
+import type { Brief, Chapter, LessonGoal, Textbook } from "../../model/types"
 import { dispatch, getPlannerState, usePlannerStore } from "../../state/store"
 import { TextbookSheet } from "./TextbookSheet"
 
@@ -125,7 +132,10 @@ export function BriefScreen() {
       textbookQuery.data?.title ??
       null
     : null
-  const firstSelectedChapter = chaptersQuery.data?.find((c) => c.id === brief.chapterIds[0]) ?? null
+  const selectedChapters = (chaptersQuery.data ?? []).filter((c) =>
+    brief.chapterIds.includes(c.id)
+  )
+  const [curriculumChapter, setCurriculumChapter] = useState<Chapter | null>(null)
 
   // Custom goal — anything in brief.goals outside the predefined list.
   const customGoal = brief.goals.find((goal) => !GOAL_OPTIONS.includes(goal)) ?? ""
@@ -163,7 +173,7 @@ export function BriefScreen() {
 
   function handleSubmit() {
     startGeneration(getPlannerState().brief)
-    navigate({ to: "/plan" })
+    navigate({ to: "/plan-lekcji" })
   }
 
   return (
@@ -171,7 +181,7 @@ export function BriefScreen() {
       {hasPlan && (
         <div className="flex items-center justify-between gap-2 rounded-xl bg-muted px-4 py-1.5">
           <p className="text-sm text-muted-foreground">Masz już plan tej lekcji</p>
-          <Button variant="link" className="px-0" onClick={() => navigate({ to: "/plan" })}>
+          <Button variant="link" className="px-0" onClick={() => navigate({ to: "/plan-lekcji" })}>
             Wróć do planu
           </Button>
         </div>
@@ -305,10 +315,21 @@ export function BriefScreen() {
                       })}
                     </ul>
                   )}
-                  {firstSelectedChapter && (
-                    <InfoChip className="mt-1 self-start">
-                      Podstawa programowa: {firstSelectedChapter.curriculumCode}
-                    </InfoChip>
+                  {selectedChapters.length > 0 && (
+                    <div className="mt-1 flex flex-wrap gap-1.5">
+                      {selectedChapters.map((chapter) => (
+                        <button
+                          key={chapter.id}
+                          type="button"
+                          className="min-h-11 outline-none focus-visible:rounded-full focus-visible:ring-3 focus-visible:ring-ring/50 active:translate-y-px"
+                          onClick={() => setCurriculumChapter(chapter)}
+                        >
+                          <InfoChip className="hover:bg-secondary">
+                            Podstawa programowa: {chapter.curriculumCode}
+                          </InfoChip>
+                        </button>
+                      ))}
+                    </div>
                   )}
                 </div>
               )}
@@ -451,6 +472,12 @@ export function BriefScreen() {
         </div>
       </div>
 
+      <CurriculumSheet
+        chapter={curriculumChapter}
+        onOpenChange={(open) => {
+          if (!open) setCurriculumChapter(null)
+        }}
+      />
       <TextbookSheet
         open={sheetOpen}
         onOpenChange={setSheetOpen}
@@ -461,5 +488,48 @@ export function BriefScreen() {
         }}
       />
     </div>
+  )
+}
+
+/**
+ * Prosty podgląd wpisu podstawy programowej dla rozdziału. Treść jest
+ * przykładowa (mock) — ten sam szablon dla każdego kodu.
+ */
+function CurriculumSheet({
+  chapter,
+  onOpenChange,
+}: {
+  chapter: Chapter | null
+  onOpenChange: (open: boolean) => void
+}) {
+  return (
+    <Sheet open={chapter != null} onOpenChange={onOpenChange}>
+      <SheetContent>
+        {chapter != null && (
+          <>
+            <SheetHeader>
+              <SheetTitle>Podstawa programowa {chapter.curriculumCode}</SheetTitle>
+            </SheetHeader>
+            <SheetBody className="flex flex-col gap-3 text-sm">
+              <p className="text-muted-foreground">
+                Język obcy nowożytny · II etap edukacyjny · wymaganie szczegółowe{" "}
+                {chapter.curriculumCode}
+              </p>
+              <p>
+                Uczeń posługuje się podstawowym zasobem środków językowych (leksykalnych,
+                gramatycznych, ortograficznych i fonetycznych) w zakresie tematu:{" "}
+                <span className="font-medium">{chapter.title}</span>.
+              </p>
+              <ul className="flex list-disc flex-col gap-1.5 pl-5">
+                <li>rozumie proste wypowiedzi ustne i pisemne dotyczące tego tematu,</li>
+                <li>tworzy krótkie, spójne wypowiedzi ustne i pisemne,</li>
+                <li>reaguje językowo w typowych sytuacjach życia codziennego,</li>
+                <li>stosuje podstawowe struktury gramatyczne poznane w rozdziale.</li>
+              </ul>
+            </SheetBody>
+          </>
+        )}
+      </SheetContent>
+    </Sheet>
   )
 }

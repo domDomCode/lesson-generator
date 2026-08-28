@@ -79,7 +79,7 @@ export function PlanScreen() {
   }
 
   return (
-    <div className="px-4 pt-4 pb-28">
+    <div className="px-4 pt-4 pb-40">
       {/* 1. Header */}
       {doc != null ? (
         <header>
@@ -172,7 +172,7 @@ export function PlanScreen() {
               key={assumption}
               type="button"
               className="min-h-11 outline-none focus-visible:rounded-full focus-visible:ring-3 focus-visible:ring-ring/50 active:translate-y-px"
-              onClick={() => navigate({ to: "/brief" })}
+              onClick={() => navigate({ to: "/zalozenia-lekcji" })}
             >
               <InfoChip className="hover:bg-secondary">{assumption}</InfoChip>
             </button>

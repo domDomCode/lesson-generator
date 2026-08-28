@@ -7,6 +7,6 @@ export const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/",
   beforeLoad: () => {
-    throw redirect({ to: "/brief" })
+    throw redirect({ to: "/zalozenia-lekcji" })
   },
 })

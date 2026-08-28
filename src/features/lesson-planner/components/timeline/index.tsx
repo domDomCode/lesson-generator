@@ -1,7 +1,7 @@
 // Vertical lesson timeline: the reading surface of the plan. A left rail
 // carries the axis (line + numbered node + minutes), block cards sit to its
-// right. The timeline owns the ONE IntersectionObserver that drives the
-// scroll-spy channel; the budget bar only subscribes to it.
+// right. The timeline owns the scroll-spy ("reading line" over the cards)
+// that drives the active-block channel; the budget bar only subscribes.
 
 import * as React from "react"
 
@@ -28,58 +28,55 @@ export function Timeline({
   const listRef = React.useRef<HTMLOListElement>(null)
   const idsKey = blocks.map((b) => b.id).join("|")
 
-  // Scroll-spy: one observer over all cards, re-created when the set of
-  // blocks changes. IO emits only on change — no scroll listeners.
+  // Scroll-spy: a "reading line" that sweeps down the viewport with scroll
+  // progress. At the top of the page the line sits at the viewport top, at
+  // the bottom it reaches the viewport bottom, and the active block is the
+  // card the line passes through (or the nearest one). Unlike a fixed
+  // middle-band IntersectionObserver, this is monotonic and visits every
+  // block — the first and last included — even when the scrollable range is
+  // shorter than the viewport band would need.
   React.useEffect(() => {
     const root = listRef.current
     if (!root) return
     const cards = Array.from(root.querySelectorAll<HTMLElement>("[data-block-id]"))
     if (cards.length === 0) return
 
-    const intersecting = new Map<string, HTMLElement>()
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          const el = entry.target as HTMLElement
-          const id = el.dataset.blockId
-          if (!id) continue
-          if (entry.isIntersecting) intersecting.set(id, el)
-          else intersecting.delete(id)
-        }
-        let topId: string | null = null
-        let topY = Infinity
-        for (const [id, el] of intersecting) {
-          const y = el.getBoundingClientRect().top
-          if (y < topY) {
-            topY = y
-            topId = id
-          }
-        }
-        if (topId) setActiveBlockFromScroll(topId)
-      },
-      { rootMargin: "-45% 0px -45% 0px", threshold: 0 }
-    )
-    for (const card of cards) observer.observe(card)
+    const pickActive = () => {
+      const doc = document.documentElement
+      const maxScroll = doc.scrollHeight - window.innerHeight
+      const progress = maxScroll > 0 ? Math.min(1, Math.max(0, window.scrollY / maxScroll)) : 1
+      const focusY = progress * window.innerHeight
 
-    // Bottom-edge correction: the last card may never reach the middle band
-    // when the page is scrolled all the way down, so the observer alone
-    // would leave the previous block active. A passive, rAF-throttled
-    // listener flips the last block on when the viewport hits the bottom.
-    const lastId = cards[cards.length - 1]?.dataset.blockId ?? null
+      let bestId: string | null = null
+      let bestDistance = Infinity
+      for (const card of cards) {
+        const id = card.dataset.blockId
+        if (!id) continue
+        const rect = card.getBoundingClientRect()
+        const distance =
+          focusY < rect.top ? rect.top - focusY : focusY > rect.bottom ? focusY - rect.bottom : 0
+        if (distance < bestDistance) {
+          bestDistance = distance
+          bestId = id
+        }
+      }
+      if (bestId) setActiveBlockFromScroll(bestId)
+    }
+
     let raf = 0
-    const onScroll = () => {
+    const schedule = () => {
       if (raf) return
       raf = requestAnimationFrame(() => {
         raf = 0
-        const doc = document.documentElement
-        const atBottom = window.innerHeight + window.scrollY >= doc.scrollHeight - 2
-        if (atBottom && lastId) setActiveBlockFromScroll(lastId)
+        pickActive()
       })
     }
-    window.addEventListener("scroll", onScroll, { passive: true })
+    schedule()
+    window.addEventListener("scroll", schedule, { passive: true })
+    window.addEventListener("resize", schedule)
     return () => {
-      observer.disconnect()
-      window.removeEventListener("scroll", onScroll)
+      window.removeEventListener("scroll", schedule)
+      window.removeEventListener("resize", schedule)
       if (raf) cancelAnimationFrame(raf)
     }
   }, [idsKey])
@@ -134,7 +131,10 @@ function TimelineRail({
           className={cn(
             "absolute left-1/2 w-0.5 -translate-x-1/2 bg-primary/25",
             isFirst ? "top-[22px]" : "top-0",
-            isLast ? "h-[22px]" : "bottom-0"
+            // The rail stretches only to the row's content box, so on all
+            // but the last row the line reaches down through the row's
+            // pb-5 gap to meet the next row's line.
+            isLast ? "h-[22px]" : "-bottom-5"
           )}
         />
       )}

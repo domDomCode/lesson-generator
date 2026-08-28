@@ -5,6 +5,6 @@ import { BriefScreen } from "@/features/lesson-planner/screens/brief/BriefScreen
 
 export const briefRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/brief",
+  path: "/zalozenia-lekcji",
   component: BriefScreen,
 })
