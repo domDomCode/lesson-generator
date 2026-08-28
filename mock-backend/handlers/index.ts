@@ -1,5 +1,11 @@
-import { postsHandlers } from "./posts"
+import { textbookHandlers } from "./textbooks"
+import { planHandlers } from "./plans"
+import { materialHandlers } from "./materials"
+import { examHandlers } from "./exam"
 
-// Add new feature handlers here as they're created, e.g.:
-// import { usersHandlers } from "./users"
-export const handlers = [...postsHandlers]
+export const handlers = [
+  ...textbookHandlers,
+  ...planHandlers,
+  ...materialHandlers,
+  ...examHandlers,
+]

@@ -12,5 +12,6 @@ features/<feature>/
 ```
 
 Cross-feature, reusable code (design-system primitives, generic utils) belongs
-in `src/shared/`, not here. See `src/features/posts` for a full example wired
-up to the MSW mock backend in `mock-backend/`.
+in `src/shared/`, not here. See `src/features/lesson-planner` for a full
+example wired up to the MSW mock backend in `mock-backend/` (it adds `model/`,
+`state/`, `data/` and `screens/` subfolders on top of the base pattern).

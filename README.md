@@ -11,8 +11,14 @@ pnpm install
 pnpm dev
 ```
 
-The app opens with a demo "Posts" feature backed entirely by mocked network
-requests (see [Mock backend](#mock-backend) below) — no real API required.
+The app is a mobile-first (390px-first, max 720px column) lesson planner
+for teachers, in Polish: a teacher fills in a brief, a streamed two-phase
+generation builds a 45-minute plan on a timeline with a segmented
+time-budget bar, blocks and materials are edited in bottom sheets, and the
+flow ends with an exam builder. The whole backend is mocked with MSW (see
+[Mock backend](#mock-backend) below) — no real API required — but the UI is
+fully interactive and sends real, typed HTTP payloads (the wire contract
+lives in `src/features/lesson-planner/model/types.ts`).
 
 ## Project structure
 
@@ -20,11 +26,12 @@ requests (see [Mock backend](#mock-backend) below) — no real API required.
 src/
   app/              # app shell: providers (QueryClientProvider, etc.)
   features/
-    posts/          # example feature — see src/features/README.md
-      components/
-      hooks/
-      queries/
-      mutations/
+    lesson-planner/ # the app: brief → plan → exam
+      model/        # domain types + wire DTOs (types.ts), pure budget math
+      state/        # external store (reducer + useSyncExternalStore), scroll-spy
+      data/         # typed API client, SSE generation client, query hooks
+      components/   # timeline + segmented time-budget bar (signature elements)
+      screens/      # brief/, plan/, block-sheet/, materials/, exam/
   shared/
     ui/             # shadcn/ui primitives (see src/shared/README.md)
     lib/            # shared utilities (e.g. cn())
@@ -35,10 +42,8 @@ mock-backend/
   browser.ts        # setupWorker(...handlers) entrypoint used in dev
 ```
 
-New features follow the same `components/ hooks/ queries/ mutations/`
-pattern — copy `src/features/posts` as a starting point. Anything shared
-across features (design-system primitives, generic utils) lives in
-`src/shared/`, not inside a feature folder.
+Anything shared across features (design-system primitives, generic utils)
+lives in `src/shared/`, not inside a feature folder.
 
 Adding a shadcn component: `pnpm dlx shadcn@latest add <component>` — it's
 configured (via `components.json`) to land in `src/shared/ui` automatically.

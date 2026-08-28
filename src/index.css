@@ -2,11 +2,12 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
+@import "@fontsource-variable/fraunces";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-    --font-heading: var(--font-sans);
+    --font-heading: 'Fraunces Variable', Georgia, serif;
     --font-sans: 'Geist Variable', sans-serif;
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
@@ -25,6 +26,8 @@
     --color-input: var(--input);
     --color-border: var(--border);
     --color-destructive: var(--destructive);
+    --color-warning: var(--warning);
+    --color-warning-foreground: var(--warning-foreground);
     --color-accent-foreground: var(--accent-foreground);
     --color-accent: var(--accent);
     --color-muted-foreground: var(--muted-foreground);
@@ -48,73 +51,47 @@
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/*
+ * Sepia palette — readability first. Warm paper surfaces, warm near-black
+ * ink, exactly one accent (deep pine green: timeline, active step, CTA)
+ * and one warning colour (rust: overflow) that never competes with it.
+ * Single-theme app (no dark mode — out of scope by design brief).
+ */
 :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
+    --background: oklch(0.968 0.013 84);
+    --foreground: oklch(0.245 0.02 55);
+    --card: oklch(0.99 0.007 84);
+    --card-foreground: oklch(0.245 0.02 55);
+    --popover: oklch(0.99 0.007 84);
+    --popover-foreground: oklch(0.245 0.02 55);
+    --primary: oklch(0.43 0.075 155);
+    --primary-foreground: oklch(0.985 0.006 84);
+    --secondary: oklch(0.938 0.016 82);
+    --secondary-foreground: oklch(0.3 0.02 58);
+    --muted: oklch(0.938 0.016 82);
+    --muted-foreground: oklch(0.47 0.024 62);
+    --accent: oklch(0.93 0.022 120);
+    --accent-foreground: oklch(0.3 0.03 150);
+    --destructive: oklch(0.5 0.13 40);
+    --warning: oklch(0.53 0.115 45);
+    --warning-foreground: oklch(0.985 0.006 84);
+    --border: oklch(0.885 0.02 80);
+    --input: oklch(0.885 0.02 80);
+    --ring: oklch(0.55 0.06 155);
+    --chart-1: oklch(0.43 0.075 155);
+    --chart-2: oklch(0.53 0.115 45);
+    --chart-3: oklch(0.47 0.024 62);
+    --chart-4: oklch(0.6 0.05 120);
+    --chart-5: oklch(0.35 0.03 60);
     --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
-}
-
-.dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
+    --sidebar: oklch(0.955 0.014 84);
+    --sidebar-foreground: oklch(0.245 0.02 55);
+    --sidebar-primary: oklch(0.43 0.075 155);
+    --sidebar-primary-foreground: oklch(0.985 0.006 84);
+    --sidebar-accent: oklch(0.93 0.022 120);
+    --sidebar-accent-foreground: oklch(0.3 0.03 150);
+    --sidebar-border: oklch(0.885 0.02 80);
+    --sidebar-ring: oklch(0.55 0.06 155);
 }
 
 @layer base {
@@ -127,4 +104,46 @@
   html {
     @apply font-sans;
     }
+}
+
+/*
+ * Diagonal hatch for the part of the budget bar that sticks out past the
+ * end of the lesson. Background-derived (not a fixed grey) so it stays
+ * legible over the rust overflow fill.
+ */
+@utility hatch-overflow {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent 0 5px,
+    color-mix(in oklch, var(--color-background) 72%, transparent) 5px 10px
+  );
+  outline: 1px solid color-mix(in oklch, var(--color-destructive) 55%, transparent);
+  outline-offset: -1px;
+}
+
+/* Shimmer placeholder for streaming block content. */
+@utility shimmer {
+  background: linear-gradient(
+    100deg,
+    var(--color-muted) 40%,
+    color-mix(in oklch, var(--color-muted) 55%, var(--color-card)) 50%,
+    var(--color-muted) 60%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-slide 1.6s ease-in-out infinite;
+}
+
+@keyframes shimmer-slide {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+/* Motion is decorative everywhere in this app — honour the OS setting. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
