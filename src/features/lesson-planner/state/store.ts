@@ -100,7 +100,6 @@ export type PlannerAction =
   | { type: "exam/set"; exam: Exam | null }
   /** „Wydłuż lekcję do 60 min" — zmiana budżetu czasu lekcji. */
   | { type: "lesson/minutesChanged"; minutes: number }
-  | { type: "planner/reset" }
 
 function updateBlock(doc: LessonDoc, blockId: BlockId, fn: (b: Block) => Block): LessonDoc {
   return { ...doc, blocks: doc.blocks.map((b) => (b.id === blockId ? fn(b) : b)) }
@@ -391,8 +390,6 @@ function reduce(state: PlannerState, action: PlannerAction): PlannerState {
       const doc = { ...state.doc, lessonMinutes: action.minutes }
       return { ...state, ...syncActiveVersion(state, doc) }
     }
-    case "planner/reset":
-      return initialState
   }
 }
 
