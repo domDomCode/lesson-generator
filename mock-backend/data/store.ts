@@ -42,7 +42,9 @@ export function getPlan(planId: PlanId): PlanState | undefined {
 
 /** The latest version — the one all CRUD endpoints operate on. */
 export function currentVersion(plan: PlanState): LessonVersion {
-  return plan.versions[plan.versions.length - 1]
+  const version = plan.versions[plan.versions.length - 1]
+  if (!version) throw new Error("plan has no versions")
+  return version
 }
 
 export function currentDoc(plan: PlanState): LessonDoc {

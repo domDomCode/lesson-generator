@@ -69,6 +69,7 @@ export const materialHandlers = [
       const count = (searchRotation % 2) + 1
       items = Array.from({ length: count }, (_, i) => {
         const seed = materialSearchPool[(searchRotation + i) % materialSearchPool.length]
+        if (!seed) throw new Error("materialSearchPool is empty")
         return {
           ...seed,
           id: nextId("mat"),

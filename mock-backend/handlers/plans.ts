@@ -109,6 +109,7 @@ function applyRevision(doc: LessonDoc, prompt: string): void {
   }
   // Default: refresh the closing quiz into a Kahoot version.
   const quiz = doc.blocks[doc.blocks.length - 1]
+  if (!quiz) return
   quiz.title = "Kahoot: quiz ze słownictwa"
   quiz.method = "Gra dydaktyczna"
   quiz.content = {

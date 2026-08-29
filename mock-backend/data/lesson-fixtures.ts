@@ -414,7 +414,11 @@ export function buildExamTasks(
   const tasks: ExamTask[] = []
   const suffix = difficultySuffix(difficulty)
 
-  const take = <T>(pool: T[], i: number): T => pool[i % pool.length]
+  const take = <T>(pool: T[], i: number): T => {
+    const item = pool[i % pool.length]
+    if (item === undefined) throw new Error("buildExamTasks: empty seed pool")
+    return item
+  }
 
   for (let i = 0; i < (counts.abcd ?? 0); i++) {
     const seed = take(abcdSeeds, i)
