@@ -43,6 +43,7 @@ export function BlockCard({
       data-block-id={block.id}
       className={cn(
         "relative min-w-0 flex-1 rounded-xl bg-card p-4 ring-1 transition-shadow duration-200",
+        "hover:shadow-[0_2px_14px_-4px] hover:shadow-foreground/10",
         isActive ? "ring-primary/60" : block.delta ? "ring-primary/50" : "ring-foreground/10"
       )}
     >

@@ -1,4 +1,4 @@
-import { useRef, useState, type RefObject } from "react"
+import { useEffect, useRef, useState, type RefObject } from "react"
 import { Search } from "lucide-react"
 
 import { Input } from "@/shared/ui/input"
@@ -21,17 +21,26 @@ interface TextbookSheetProps {
  */
 export function TextbookSheet({ open, onOpenChange, onSelect }: TextbookSheetProps) {
   const inputRef = useRef<HTMLInputElement>(null)
+  const focusTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
+
+  useEffect(() => () => clearTimeout(focusTimer.current), [])
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         className="h-[75svh] md:h-[560px]"
         onOpenAutoFocus={(event) => {
+          // Defer the focus until the open animation has settled. Focusing
+          // synchronously on first open brings up the mobile keyboard before
+          // the browser has laid out the sheet, so it never scrolls the input
+          // into view and the field ends up hidden behind the keyboard.
           event.preventDefault()
-          inputRef.current?.focus()
+          clearTimeout(focusTimer.current)
+          focusTimer.current = setTimeout(() => inputRef.current?.focus(), 500)
         }}
+        onCloseAutoFocus={() => clearTimeout(focusTimer.current)}
       >
-        <SheetHeader>
+        <SheetHeader className="md:pb-5">
           <SheetTitle>Wybierz podręcznik</SheetTitle>
         </SheetHeader>
         <TextbookSearch inputRef={inputRef} onSelect={onSelect} />

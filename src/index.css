@@ -72,6 +72,15 @@
   html {
     @apply font-sans;
   }
+  /*
+   * Tailwind / Preflight v4 dropped the UA `cursor: pointer` on buttons.
+   * Restore it for every enabled button and button-role control; disabled
+   * ones keep the default arrow.
+   */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
 }
 
 /*
