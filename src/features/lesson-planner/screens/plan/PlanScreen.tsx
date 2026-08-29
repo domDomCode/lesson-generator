@@ -34,6 +34,28 @@ import { PromptBar } from "./PromptBar"
 import { RepairBar } from "./RepairBar"
 import { formatBlocks, formatMaterials } from "./plural"
 
+/**
+ * MSW streams its mock SSE response to the service worker through a
+ * transferable ReadableStream, which WebKit/iOS Safari doesn't support — it
+ * buffers the whole body instead, so generation there lands in a single
+ * paint. Detect that (try to transfer a stream over a MessageChannel) and
+ * warn the user during loading. Mock-only; hidden against a real backend.
+ */
+const showStreamDisclaimer =
+  import.meta.env.VITE_ENABLE_MOCKS === "true" &&
+  (() => {
+    try {
+      const stream = new ReadableStream()
+      const { port1, port2 } = new MessageChannel()
+      port1.postMessage(stream, [stream as unknown as Transferable])
+      port1.close()
+      port2.close()
+      return false
+    } catch {
+      return true
+    }
+  })()
+
 export function PlanScreen() {
   const doc = usePlannerStore(selectVisibleDoc)
   const blocks = usePlannerStore(selectBlocksView)
@@ -101,6 +123,12 @@ export function PlanScreen() {
           jump when generation completes. */}
       {isGenerating && (
         <>
+          {showStreamDisclaimer && (
+            <p className="mt-3 rounded-md bg-muted px-3 py-2 text-xs text-muted-foreground">
+              Treść pojawia się na żywo tylko na komputerze — na telefonie
+              (ograniczenie mocków) cały plan wyświetli się naraz.
+            </p>
+          )}
           <div className="mt-3 flex min-h-11 items-center gap-2 rounded-lg bg-card px-3 text-sm text-muted-foreground ring-1 ring-foreground/5">
             <LoaderCircle className="size-4 shrink-0 animate-spin text-primary" aria-hidden />
             <span
