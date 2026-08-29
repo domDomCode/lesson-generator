@@ -2,7 +2,7 @@ import { createRoute, redirect } from "@tanstack/react-router"
 
 import { rootRoute } from "@/app/routes/root"
 import { getPlannerState } from "@/features/lesson-planner/state/store"
-import { PlanScreen } from "@/features/lesson-planner/screens/plan/PlanScreen"
+import { PlanScreen } from "@/features/lesson-planner/screens/plan/plan-screen"
 
 export const planRoute = createRoute({
   getParentRoute: () => rootRoute,

@@ -12,11 +12,6 @@ import type { BlockView } from "../../state/store"
 import type { TimelineProps } from "../contracts"
 import { BlockCard } from "./block-card"
 
-export { BlockCard } from "./block-card"
-export type { BlockCardProps } from "./block-card"
-export { MaterialSlotView } from "./material-slot"
-export type { MaterialSlotViewProps } from "./material-slot"
-
 export function Timeline({
   blocks,
   generationPhase,

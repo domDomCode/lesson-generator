@@ -9,9 +9,9 @@ import * as React from "react"
 import { useIsMobile } from "@/shared/hooks/use-mobile"
 import { cn } from "@/shared/lib/utils"
 
-import type { BudgetSummary } from "../../model/budget"
-import { useActiveBlockId } from "../../state/active-block"
-import type { TimeBudgetBarProps } from "../contracts"
+import type { BudgetSummary } from "../model/budget"
+import { useActiveBlockId } from "../state/active-block"
+import type { TimeBudgetBarProps } from "./contracts"
 
 /**
  * Permanent right-hand gutter overflow can extend into — nothing reflows.

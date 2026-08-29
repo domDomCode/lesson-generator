@@ -13,8 +13,8 @@ import { InfoChip } from "@/shared/ui/chip"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/shared/ui/collapsible"
 import { toast } from "@/shared/ui/toast"
 
-import { TimeBudgetBar } from "../../components/budget-bar"
-import { Timeline } from "../../components/timeline"
+import { TimeBudgetBar } from "../../components/time-budget-bar"
+import { Timeline } from "../../components/timeline/timeline"
 import { restoreVersion, setMaterialStatus } from "../../data/api"
 import { startGeneration } from "../../data/generation"
 import { computeBudget } from "../../model/budget"
@@ -34,11 +34,11 @@ import {
   selectVisibleDoc,
   usePlannerStore,
 } from "../../state/store"
-import { BlockSheet } from "../block-sheet/BlockSheet"
-import { MaterialsSheet } from "../materials/MaterialsSheet"
-import { AutoFitFooter } from "./AutoFitFooter"
-import { PromptBar } from "./PromptBar"
-import { RepairBar } from "./RepairBar"
+import { BlockSheet } from "../block-sheet/block-sheet"
+import { MaterialsSheet } from "../materials/materials-sheet"
+import { AutoFitFooter } from "./auto-fit-footer"
+import { PromptBar } from "./prompt-bar"
+import { RepairBar } from "./repair-bar"
 import { formatBlocks, formatMaterials } from "./plural"
 
 /**

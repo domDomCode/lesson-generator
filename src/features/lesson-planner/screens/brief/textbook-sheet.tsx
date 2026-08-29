@@ -6,7 +6,7 @@ import { Sheet, SheetBody, SheetContent, SheetHeader, SheetTitle } from "@/share
 
 import { useTextbookSearch } from "../../data/textbooks"
 import type { Textbook } from "../../model/types"
-import { useDebouncedValue } from "./useDebouncedValue"
+import { useDebouncedValue } from "./use-debounced-value"
 
 interface TextbookSheetProps {
   open: boolean

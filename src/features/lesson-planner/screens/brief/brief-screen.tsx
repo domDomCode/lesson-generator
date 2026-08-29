@@ -20,7 +20,7 @@ import { startGeneration } from "../../data/generation"
 import { useChapters, useTextbook } from "../../data/textbooks"
 import type { Brief, Chapter, LessonGoal, Textbook } from "../../model/types"
 import { dispatch, getPlannerState, usePlannerStore } from "../../state/store"
-import { TextbookSheet } from "./TextbookSheet"
+import { TextbookSheet } from "./textbook-sheet"
 
 const GRADES = ["4", "5", "6", "7", "8"]
 const DURATIONS = [30, 45, 60, 90]

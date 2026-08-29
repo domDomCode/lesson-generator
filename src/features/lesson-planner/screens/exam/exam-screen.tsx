@@ -23,7 +23,7 @@ import {
   formatEstimate,
   type ExamCounts,
 } from "./exam-config"
-import { ExamPreview } from "./ExamPreview"
+import { ExamPreview } from "./exam-preview"
 import { downloadExamPdf } from "./pdf"
 
 export function ExamScreen() {

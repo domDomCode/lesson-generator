@@ -1,6 +1,6 @@
 import { useNavigate, useRouterState } from "@tanstack/react-router"
 
-import { ProcessStepper, type StepItem, type StepState } from "@/shared/ui/stepper"
+import { ProcessStepper, type StepItem, type StepState } from "@/shared/ui/process-stepper"
 import { selectPlanReady, usePlannerStore } from "../state/store"
 
 /**

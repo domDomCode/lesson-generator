@@ -9,7 +9,7 @@ import { InfoChip } from "@/shared/ui/chip"
 import type { BlockId, Material } from "../../model/types"
 import { blockCardDomId } from "../../state/active-block"
 import type { BlockView, GenerationPhase } from "../../state/store"
-import { MaterialSlotView } from "./material-slot"
+import { MaterialSlotView } from "./material-slot-view"
 
 export interface BlockCardProps {
   block: BlockView

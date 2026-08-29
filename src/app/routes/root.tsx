@@ -1,7 +1,7 @@
 import { createRootRoute, Outlet } from "@tanstack/react-router"
 import { TanStackRouterDevtools } from "@tanstack/router-devtools"
 
-import { PlannerStepper } from "@/features/lesson-planner/components/process-stepper"
+import { PlannerStepper } from "@/features/lesson-planner/components/planner-stepper"
 import { Toaster } from "@/shared/ui/toast"
 
 export const rootRoute = createRootRoute({
