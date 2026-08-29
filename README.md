@@ -1,15 +1,18 @@
-# edu-app-quantica
+# Planer Lekcji
 
-React + TypeScript + Vite, with TanStack Query for data fetching, shadcn/ui
-for the design system, and MSW for a realistic mock backend during
-development.
+A mobile-first lesson planner for teachers (Polish UI). React 19 + TypeScript +
+Vite, TanStack Router + Query, a shadcn-style Radix UI kit, and MSW for a
+realistic mock backend during development.
 
 ## Getting started
 
 ```bash
 pnpm install
+cp .env.example .env   # keeps the mock backend on for local dev
 pnpm dev
 ```
+
+Requires Node ≥ 22 and pnpm (see `packageManager` in `package.json`).
 
 The app is a mobile-first (390px-first, max 720px column) lesson planner
 for teachers, in Polish: a teacher fills in a brief, a streamed two-phase
@@ -24,16 +27,16 @@ lives in `src/features/lesson-planner/model/types.ts`).
 
 ```
 src/
-  app/              # app shell: providers (QueryClientProvider, etc.)
+  app/              # app shell: providers, router, route fallbacks, error boundary
   features/
-    lesson-planner/ # the app: brief → plan → exam
-      model/        # domain types + wire DTOs (types.ts), pure budget math
+    lesson-planner/ # the app: brief → plan → exam (see src/features/README.md)
+      model/        # domain types + wire DTOs, pure helpers (budget, plural, labels)
       state/        # external store (reducer + useSyncExternalStore), scroll-spy
-      data/         # typed API client, SSE generation client, query hooks
-      components/   # timeline + segmented time-budget bar (signature elements)
+      data/         # typed API client, SSE generation client, query hooks, mutations
+      components/   # presentational feature UI: timeline/, time-budget-bar, ...
       screens/      # brief/, plan/, block-sheet/, materials/, exam/
   shared/
-    ui/             # shadcn/ui primitives (see src/shared/README.md)
+    ui/             # Radix UI + Tailwind primitives (see src/shared/README.md)
     lib/            # shared utilities (e.g. cn())
     hooks/          # cross-feature hooks
 mock-backend/
@@ -42,11 +45,14 @@ mock-backend/
   browser.ts        # setupWorker(...handlers) entrypoint used in dev
 ```
 
-Anything shared across features (design-system primitives, generic utils)
-lives in `src/shared/`, not inside a feature folder.
+Conventions: kebab-case filenames, one primary component per file (named after
+it), no components in `index.*` barrels. The `@/…` alias crosses top-level
+areas; imports within a feature are relative. `mock-backend/` imports the wire
+contract and budget math from `src/features/lesson-planner/model/` (kept
+framework-free) so the mock and the app share one source of truth.
 
-Adding a shadcn component: `pnpm dlx shadcn@latest add <component>` — it's
-configured (via `components.json`) to land in `src/shared/ui` automatically.
+Adding a UI primitive: `pnpm dlx shadcn@latest add <component>` — `components.json`
+lands it in `src/shared/ui`.
 
 ## Mock backend
 
@@ -69,3 +75,6 @@ and register the handlers in `mock-backend/handlers/index.ts`.
 - `pnpm dev` — start the dev server
 - `pnpm build` — type-check and build for production
 - `pnpm preview` — preview the production build locally
+- `pnpm typecheck` — `tsc -b` (strict)
+- `pnpm lint` — oxlint
+- `pnpm format` / `pnpm format:check` — Prettier

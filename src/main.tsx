@@ -19,12 +19,23 @@ async function enableMocking() {
   })
 }
 
-enableMocking().then(() => {
-  createRoot(document.getElementById("root")!).render(
+const rootEl = document.getElementById("root")
+if (!rootEl) throw new Error("Missing #root element in index.html")
+
+function render() {
+  createRoot(rootEl!).render(
     <StrictMode>
       <AppProviders>
         <RouterProvider router={router} />
       </AppProviders>
     </StrictMode>
   )
-})
+}
+
+// Render even if the mock worker fails to register — a missing dev backend
+// shouldn't leave the user staring at a blank page.
+enableMocking()
+  .catch((err) => {
+    console.error("Mock backend failed to start; continuing without it.", err)
+  })
+  .finally(render)
