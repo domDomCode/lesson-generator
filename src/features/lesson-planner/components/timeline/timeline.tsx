@@ -8,7 +8,7 @@ import * as React from "react"
 import { cn } from "@/shared/lib/utils"
 
 import type { BlockId, Material } from "../../model/types"
-import { setActiveBlockFromScroll, useActiveBlockId } from "../../state/active-block"
+import { setActiveBlockFromScroll, useIsActiveBlock } from "../../state/active-block"
 import type { BlockView, GenerationPhase } from "../../state/store"
 import { BlockCard } from "./block-card"
 
@@ -28,7 +28,6 @@ export function Timeline({
   onMaterialAccept,
   onMaterialReject,
 }: TimelineProps) {
-  const activeBlockId = useActiveBlockId()
   const listRef = React.useRef<HTMLOListElement>(null)
   const idsKey = blocks.map((b) => b.id).join("|")
 
@@ -88,29 +87,60 @@ export function Timeline({
   return (
     <ol ref={listRef} className="flex flex-col">
       {blocks.map((block, i) => (
-        <li
+        <TimelineRow
           key={block.id}
-          className="relative flex gap-3 pb-5 duration-300 animate-in fade-in-0 slide-in-from-bottom-2 last:pb-0"
-        >
-          <TimelineRail
-            block={block}
-            isFirst={i === 0}
-            isLast={i === blocks.length - 1}
-            isActive={block.id === activeBlockId}
-          />
-          <BlockCard
-            block={block}
-            generationPhase={generationPhase}
-            isActive={block.id === activeBlockId}
-            onBlockTap={onBlockTap}
-            onMaterialAccept={onMaterialAccept}
-            onMaterialReject={onMaterialReject}
-          />
-        </li>
+          block={block}
+          isFirst={i === 0}
+          isLast={i === blocks.length - 1}
+          generationPhase={generationPhase}
+          onBlockTap={onBlockTap}
+          onMaterialAccept={onMaterialAccept}
+          onMaterialReject={onMaterialReject}
+        />
       ))}
     </ol>
   )
 }
+
+interface TimelineRowProps {
+  block: BlockView
+  isFirst: boolean
+  isLast: boolean
+  generationPhase: GenerationPhase
+  onBlockTap: (blockId: BlockId) => void
+  onMaterialAccept: (material: Material) => void
+  onMaterialReject: (material: Material) => void
+}
+
+/**
+ * One row subscribes to its own active state, so a scroll tick that moves
+ * the reading line only re-renders the two rows whose highlight changes.
+ * Memoised so an unrelated parent render doesn't reconcile every card.
+ */
+const TimelineRow = React.memo(function TimelineRow({
+  block,
+  isFirst,
+  isLast,
+  generationPhase,
+  onBlockTap,
+  onMaterialAccept,
+  onMaterialReject,
+}: TimelineRowProps) {
+  const isActive = useIsActiveBlock(block.id)
+  return (
+    <li className="relative flex gap-3 pb-5 duration-300 animate-in fade-in-0 slide-in-from-bottom-2 last:pb-0">
+      <TimelineRail block={block} isFirst={isFirst} isLast={isLast} isActive={isActive} />
+      <BlockCard
+        block={block}
+        generationPhase={generationPhase}
+        isActive={isActive}
+        onBlockTap={onBlockTap}
+        onMaterialAccept={onMaterialAccept}
+        onMaterialReject={onMaterialReject}
+      />
+    </li>
+  )
+})
 
 /**
  * The axis for one row: a continuous vertical line through all rows, a

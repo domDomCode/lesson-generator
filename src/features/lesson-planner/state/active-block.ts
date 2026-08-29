@@ -1,6 +1,7 @@
 // Lightweight scroll-spy channel, separate from the document store so the
-// timeline doesn't re-render on every intersection tick. Only the budget
-// bar segments and block-card headers subscribe.
+// timeline doesn't re-render on every scroll tick. Subscribers take a
+// boolean slice (useIsActiveBlock) so a change wakes only the two rows
+// whose active state actually flips; the budget bar reads the raw id.
 
 import { useSyncExternalStore } from "react"
 
@@ -43,6 +44,14 @@ function subscribe(listener: () => void) {
 
 export function useActiveBlockId(): BlockId | null {
   return useSyncExternalStore(subscribe, () => activeBlockId)
+}
+
+/**
+ * Boolean subscription for one block. Returns a primitive, so a subscriber
+ * only re-renders when its own active state flips — not on every scroll tick.
+ */
+export function useIsActiveBlock(blockId: BlockId): boolean {
+  return useSyncExternalStore(subscribe, () => activeBlockId === blockId)
 }
 
 /** id of a block card's DOM element — used for tap-to-scroll targeting. */

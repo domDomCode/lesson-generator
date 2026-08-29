@@ -2,7 +2,7 @@
 // Layout top→bottom: header → status line / summary → version pills →
 // sticky budget bar (+ repair) → assumption chips → timeline → bottom bar.
 
-import { useMemo, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 import { useMutation } from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/react-router"
 import { LoaderCircle, X } from "lucide-react"
@@ -107,11 +107,20 @@ export function PlanScreen() {
     budget.overflowMinutes > 0 &&
     planId != null
 
-  const changeMaterialStatus = (material: Material, status: "accepted" | "rejected") => {
-    if (isPreview || planId == null) return
-    if (status === "accepted") acceptMaterial(planId, material.id)
-    else rejectMaterial(planId, material.id)
-  }
+  // Stable identities so the memoised timeline rows don't reconcile on every
+  // PlanScreen render.
+  const onMaterialAccept = useCallback(
+    (material: Material) => {
+      if (!isPreview && planId != null) acceptMaterial(planId, material.id)
+    },
+    [isPreview, planId]
+  )
+  const onMaterialReject = useCallback(
+    (material: Material) => {
+      if (!isPreview && planId != null) rejectMaterial(planId, material.id)
+    },
+    [isPreview, planId]
+  )
 
   return (
     <div className="px-4 pt-4 pb-40">
@@ -239,8 +248,8 @@ export function PlanScreen() {
           blocks={blocks}
           generationPhase={phase}
           onBlockTap={isPreview ? noop : setOpenBlockId}
-          onMaterialAccept={(m) => changeMaterialStatus(m, "accepted")}
-          onMaterialReject={(m) => changeMaterialStatus(m, "rejected")}
+          onMaterialAccept={onMaterialAccept}
+          onMaterialReject={onMaterialReject}
         />
       </div>
 
