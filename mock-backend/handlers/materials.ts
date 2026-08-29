@@ -13,8 +13,7 @@ import type {
 import { materialSearchPool } from "../data/lesson-fixtures"
 import { currentDoc, getPlan, nextId } from "../data/store"
 
-const planNotFound = () =>
-  HttpResponse.json({ message: "Nie znaleziono planu" }, { status: 404 })
+const planNotFound = () => HttpResponse.json({ message: "Nie znaleziono planu" }, { status: 404 })
 
 const materialNotFound = () =>
   HttpResponse.json({ message: "Nie znaleziono materiału" }, { status: 404 })
@@ -103,36 +102,30 @@ export const materialHandlers = [
   }),
 
   // POST /api/plans/:planId/materials/:materialId/move — between blocks' slots.
-  http.post(
-    "/api/plans/:planId/materials/:materialId/move",
-    async ({ params, request }) => {
-      await delay(300)
-      const plan = getPlan(params.planId as string)
-      if (!plan) return planNotFound()
+  http.post("/api/plans/:planId/materials/:materialId/move", async ({ params, request }) => {
+    await delay(300)
+    const plan = getPlan(params.planId as string)
+    if (!plan) return planNotFound()
 
-      const doc = currentDoc(plan)
-      const found = findMaterial(doc, params.materialId as string)
-      if (!found) return materialNotFound()
+    const doc = currentDoc(plan)
+    const found = findMaterial(doc, params.materialId as string)
+    if (!found) return materialNotFound()
 
-      const body = (await request.json()) as MaterialMoveRequest
-      const target = doc.blocks.find((b) => b.id === body.toBlockId)
-      if (!target) {
-        return HttpResponse.json(
-          { message: "Nie znaleziono bloku docelowego" },
-          { status: 404 }
-        )
-      }
-
-      if (found.block.materials.status === "ready") {
-        found.block.materials.items = found.block.materials.items.filter(
-          (m) => m.id !== found.material.id
-        )
-      }
-      found.material.blockId = target.id
-      attachToBlock(target, found.material)
-
-      const response: MaterialMoveResponse = { material: found.material }
-      return HttpResponse.json(response)
+    const body = (await request.json()) as MaterialMoveRequest
+    const target = doc.blocks.find((b) => b.id === body.toBlockId)
+    if (!target) {
+      return HttpResponse.json({ message: "Nie znaleziono bloku docelowego" }, { status: 404 })
     }
-  ),
+
+    if (found.block.materials.status === "ready") {
+      found.block.materials.items = found.block.materials.items.filter(
+        (m) => m.id !== found.material.id
+      )
+    }
+    found.material.blockId = target.id
+    attachToBlock(target, found.material)
+
+    const response: MaterialMoveResponse = { material: found.material }
+    return HttpResponse.json(response)
+  }),
 ]

@@ -80,7 +80,7 @@ export const chapters: Chapter[] = [
   {
     id: "ch-did2-3",
     textbookId: DAS_IST_DEUTSCH_ID,
-    title: "Kapitel 3 — Meine Familie (słownictwo rodzinne + czasownik „haben\")",
+    title: 'Kapitel 3 — Meine Familie (słownictwo rodzinne + czasownik „haben")',
     curriculumCode: "II.5.2",
   },
   {
@@ -132,7 +132,7 @@ export const chapters: Chapter[] = [
 // Generated plan — 5 blocks + materials for blocks 2 and 3
 // ---------------------------------------------------------------------------
 
-export const DEMO_TOPIC = "Meine Familie — słownictwo rodzinne i czasownik „haben\""
+export const DEMO_TOPIC = 'Meine Familie — słownictwo rodzinne i czasownik „haben"'
 export const DEMO_SUBJECT = "Niemiecki"
 export const DEMO_GRADE = "7"
 export const DEMO_ASSUMPTIONS = ["45 min", "grupy 4-osobowe", "dostępny rzutnik"]
@@ -181,17 +181,17 @@ const blockSeeds: BlockSeed[] = [
     form: "Praca w parach",
     minutes: 12,
     content:
-      "Uczniowie w parach opisują swoje drzewo genealogiczne po niemiecku, używając słownictwa Vater, Mutter, Bruder, Schwester oraz czasownika haben. Jedna osoba opisuje swoją rodzinę, druga zadaje pytania („Hast du Geschwister?\"), następnie się zamieniają.",
+      'Uczniowie w parach opisują swoje drzewo genealogiczne po niemiecku, używając słownictwa Vater, Mutter, Bruder, Schwester oraz czasownika haben. Jedna osoba opisuje swoją rodzinę, druga zadaje pytania („Hast du Geschwister?"), następnie się zamieniają.',
     hasMaterials: true,
   },
   {
     id: "b4",
-    title: "Stacje zadaniowe: dopasuj słówka, ułóż zdania z „haben\"",
+    title: 'Stacje zadaniowe: dopasuj słówka, ułóż zdania z „haben"',
     method: "Metoda aktywizująca",
     form: "Grupy 4-osobowe",
     minutes: 13,
     content:
-      "Klasa pracuje w grupach 4-osobowych na dwóch stacjach zadaniowych. Na stacji pierwszej uczniowie dopasowują karty ze słówkami do obrazków członków rodziny (der Vater, die Mutter, der Bruder, die Schwester). Na stacji drugiej układają z rozsypanki wyrazowej zdania z czasownikiem „haben\", np. „Ich habe einen Bruder\", „Du hast zwei Schwestern\". Po około sześciu minutach grupy zamieniają się stacjami.",
+      'Klasa pracuje w grupach 4-osobowych na dwóch stacjach zadaniowych. Na stacji pierwszej uczniowie dopasowują karty ze słówkami do obrazków członków rodziny (der Vater, die Mutter, der Bruder, die Schwester). Na stacji drugiej układają z rozsypanki wyrazowej zdania z czasownikiem „haben", np. „Ich habe einen Bruder", „Du hast zwei Schwestern". Po około sześciu minutach grupy zamieniają się stacjami.',
     hasMaterials: false,
   },
   {
@@ -355,16 +355,14 @@ const shortSeeds: Pick<ExamTask, "prompt" | "points">[] = [
     points: 2,
   },
   {
-    prompt:
-      "Uzupełnij zdanie właściwą formą czasownika haben: Meine Eltern ___ zwei Kinder.",
+    prompt: "Uzupełnij zdanie właściwą formą czasownika haben: Meine Eltern ___ zwei Kinder.",
     points: 2,
   },
 ]
 
 const longSeeds: Pick<ExamTask, "prompt" | "points">[] = [
   {
-    prompt:
-      "Opisz swoją rodzinę po niemiecku (4–5 zdań), użyj czasownika haben.",
+    prompt: "Opisz swoją rodzinę po niemiecku (4–5 zdań), użyj czasownika haben.",
     points: 5,
   },
   {

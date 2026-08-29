@@ -293,59 +293,53 @@ function BlockSheetContent({
 
         {/* Materiały — every block can get one via search or move. */}
         <section className="flex flex-col gap-2">
-            <h3 className="font-heading text-sm font-medium">
-              Materiały przypisane do tego bloku
-            </h3>
+          <h3 className="font-heading text-sm font-medium">Materiały przypisane do tego bloku</h3>
 
-            {slot.status === "searching" ? (
-              <div className="flex items-center gap-2 py-2 text-sm text-muted-foreground">
-                <Loader2 className="size-4 animate-spin" aria-hidden />
-                Szukam materiałów…
-              </div>
-            ) : (
-              <>
-                {slot.status === "error" && (
-                  <p className="text-sm text-warning">
-                    {slot.message} Poszukaj jeszcze raz poniżej.
-                  </p>
-                )}
-                {visibleItems.map((material) => (
-                  <MaterialCard
-                    key={material.id}
-                    planId={planId}
-                    material={material}
-                    blocks={doc.blocks}
-                    moveLabel="Przenieś do innego bloku"
-                  />
-                ))}
-                <p className="text-sm text-muted-foreground">
-                  {slot.status === "none" ||
-                  (slot.status === "ready" && visibleItems.length === 0)
-                    ? "Nie znalazłem materiałów do tego bloku. Napisz, czego szukać."
-                    : "Poszukaj materiału do tego bloku"}
-                </p>
-                <form onSubmit={submitSearch} className="flex gap-2">
-                  <Input
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Napisz, czego szukać"
-                    aria-label="Poszukaj materiału do tego bloku"
-                    className="h-11 flex-1"
-                  />
-                  <Button
-                    type="submit"
-                    variant="secondary"
-                    className="h-11"
-                    disabled={!searchQuery.trim() || searchPending}
-                  >
-                    {searchPending && <Loader2 className="size-4 animate-spin" aria-hidden />}
-                    {searchPending ? "Szukam…" : "Poszukaj"}
-                  </Button>
-                </form>
-              </>
-            )}
+          {slot.status === "searching" ? (
+            <div className="flex items-center gap-2 py-2 text-sm text-muted-foreground">
+              <Loader2 className="size-4 animate-spin" aria-hidden />
+              Szukam materiałów…
+            </div>
+          ) : (
+            <>
+              {slot.status === "error" && (
+                <p className="text-sm text-warning">{slot.message} Poszukaj jeszcze raz poniżej.</p>
+              )}
+              {visibleItems.map((material) => (
+                <MaterialCard
+                  key={material.id}
+                  planId={planId}
+                  material={material}
+                  blocks={doc.blocks}
+                  moveLabel="Przenieś do innego bloku"
+                />
+              ))}
+              <p className="text-sm text-muted-foreground">
+                {slot.status === "none" || (slot.status === "ready" && visibleItems.length === 0)
+                  ? "Nie znalazłem materiałów do tego bloku. Napisz, czego szukać."
+                  : "Poszukaj materiału do tego bloku"}
+              </p>
+              <form onSubmit={submitSearch} className="flex gap-2">
+                <Input
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Napisz, czego szukać"
+                  aria-label="Poszukaj materiału do tego bloku"
+                  className="h-11 flex-1"
+                />
+                <Button
+                  type="submit"
+                  variant="secondary"
+                  className="h-11"
+                  disabled={!searchQuery.trim() || searchPending}
+                >
+                  {searchPending && <Loader2 className="size-4 animate-spin" aria-hidden />}
+                  {searchPending ? "Szukam…" : "Poszukaj"}
+                </Button>
+              </form>
+            </>
+          )}
         </section>
-
       </SheetBody>
 
       <SheetFooter>

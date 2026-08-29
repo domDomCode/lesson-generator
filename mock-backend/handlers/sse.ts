@@ -21,10 +21,7 @@ export type SseSend = (event: PlanStreamEvent) => void
  * enqueueing: `send` becomes a no-op once `signal` is aborted or the
  * controller has been torn down.
  */
-export function sseResponse(
-  signal: AbortSignal,
-  run: (send: SseSend) => Promise<void>
-) {
+export function sseResponse(signal: AbortSignal, run: (send: SseSend) => Promise<void>) {
   let seq = 0
   const stream = new ReadableStream<Uint8Array>({
     start(controller) {

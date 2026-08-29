@@ -82,7 +82,11 @@ export type PlannerAction =
   | { type: "generation/event"; event: PlanStreamEvent }
   | { type: "generation/failed"; message: string }
   /** Optimistic local block edit (also sent as PATCH by the caller). */
-  | { type: "block/edited"; blockId: BlockId; patch: Partial<Pick<Block, "title" | "method" | "form" | "minutes">> & { content?: string } }
+  | {
+      type: "block/edited"
+      blockId: BlockId
+      patch: Partial<Pick<Block, "title" | "method" | "form" | "minutes">> & { content?: string }
+    }
   | { type: "material/statusChanged"; materialId: string; status: "accepted" | "rejected" }
   | { type: "material/moved"; materialId: string; toBlockId: BlockId }
   | { type: "materials/searchStarted"; blockId: BlockId }
@@ -124,7 +128,10 @@ function updateMaterial(
 }
 
 /** Keep the active version's snapshot in sync with in-place doc edits. */
-function syncActiveVersion(state: PlannerState, doc: LessonDoc): Pick<PlannerState, "doc" | "versions"> {
+function syncActiveVersion(
+  state: PlannerState,
+  doc: LessonDoc
+): Pick<PlannerState, "doc" | "versions"> {
   return {
     doc,
     versions: state.versions.map((v) => (v.id === state.activeVersionId ? { ...v, doc } : v)),
@@ -194,7 +201,10 @@ function reduceGenerationEvent(state: PlannerState, event: PlanStreamEvent): Pla
         ...state,
         doc: updateBlock(state.doc, event.blockId, (b) => ({
           ...b,
-          content: { status: "ready", text: b.content.status === "streaming" ? b.content.text : "" },
+          content: {
+            status: "ready",
+            text: b.content.status === "streaming" ? b.content.text : "",
+          },
         })),
       }
     case "materials.start":
@@ -436,7 +446,11 @@ export function selectVisibleDoc(s: PlannerState): LessonDoc | null {
   return s.doc
 }
 
-let blocksViewCache: { doc: LessonDoc | null; autofit: AutoFitPreview | null; result: BlockView[] } | null = null
+let blocksViewCache: {
+  doc: LessonDoc | null
+  autofit: AutoFitPreview | null
+  result: BlockView[]
+} | null = null
 
 /** Blocks of the visible doc with the autofit overlay applied. Memoized. */
 export function selectBlocksView(s: PlannerState): BlockView[] {

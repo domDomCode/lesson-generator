@@ -53,13 +53,7 @@ function TaskBody({ task }: { task: ExamTask }) {
   )
 }
 
-export function ExamPreview({
-  exam,
-  ref,
-}: {
-  exam: Exam
-  ref?: React.Ref<HTMLElement>
-}) {
+export function ExamPreview({ exam, ref }: { exam: Exam; ref?: React.Ref<HTMLElement> }) {
   return (
     // scroll-mt keeps the header (h-12) clear when the CTA scrolls us here.
     <section ref={ref} aria-label="Podgląd sprawdzianu" className="mt-8 scroll-mt-14">

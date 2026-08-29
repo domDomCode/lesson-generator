@@ -30,10 +30,7 @@ export function AnimatedHeight({
   }, [])
 
   return (
-    <div
-      style={{ height }}
-      className="overflow-hidden transition-[height] duration-300 ease-out"
-    >
+    <div style={{ height }} className="overflow-hidden transition-[height] duration-300 ease-out">
       <div ref={contentRef} className={cn(className)}>
         {children}
       </div>

@@ -45,11 +45,7 @@ export function MaterialSlotView({ slot, onAccept, onReject }: MaterialSlotViewP
   }
 
   if (slot.status === "error") {
-    return (
-      <p className="text-xs text-muted-foreground">
-        Nie udało się poszukać materiałów
-      </p>
-    )
+    return <p className="text-xs text-muted-foreground">Nie udało się poszukać materiałów</p>
   }
 
   const items = slot.items.filter((m) => m.status !== "rejected")

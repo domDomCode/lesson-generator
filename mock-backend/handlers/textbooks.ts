@@ -26,10 +26,7 @@ export const textbookHandlers = [
     await delay(300)
     const textbook = textbooks.find((t) => t.id === params.id)
     if (!textbook) {
-      return HttpResponse.json(
-        { message: "Nie znaleziono podręcznika" },
-        { status: 404 }
-      )
+      return HttpResponse.json({ message: "Nie znaleziono podręcznika" }, { status: 404 })
     }
     return HttpResponse.json(chapters.filter((c) => c.textbookId === textbook.id))
   }),

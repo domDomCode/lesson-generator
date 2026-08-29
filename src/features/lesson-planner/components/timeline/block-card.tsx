@@ -35,8 +35,7 @@ export function BlockCard({
     !structureOnly &&
     (materials.status === "searching" ||
       materials.status === "error" ||
-      (materials.status === "ready" &&
-        materials.items.some((m) => m.status !== "rejected")))
+      (materials.status === "ready" && materials.items.some((m) => m.status !== "rejected")))
 
   return (
     <article
@@ -44,11 +43,7 @@ export function BlockCard({
       data-block-id={block.id}
       className={cn(
         "relative min-w-0 flex-1 rounded-xl bg-card p-4 ring-1 transition-shadow duration-200",
-        isActive
-          ? "ring-primary/60"
-          : block.delta
-            ? "ring-primary/50"
-            : "ring-foreground/10"
+        isActive ? "ring-primary/60" : block.delta ? "ring-primary/50" : "ring-foreground/10"
       )}
     >
       <h3>
@@ -126,10 +121,7 @@ function BlockContentView({
       </span>
       <span className="min-w-0 flex-1">
         <p
-          className={cn(
-            "text-sm leading-relaxed text-foreground/90",
-            !streaming && "line-clamp-3"
-          )}
+          className={cn("text-sm leading-relaxed text-foreground/90", !streaming && "line-clamp-3")}
         >
           {content.text}
         </p>

@@ -13,13 +13,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/sha
 import { Chip, InfoChip } from "@/shared/ui/chip"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/shared/ui/collapsible"
 import { Input } from "@/shared/ui/input"
-import {
-  Sheet,
-  SheetBody,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/shared/ui/sheet"
+import { Sheet, SheetBody, SheetContent, SheetHeader, SheetTitle } from "@/shared/ui/sheet"
 import { Textarea } from "@/shared/ui/textarea"
 
 import { startGeneration } from "../../data/generation"
@@ -40,7 +34,13 @@ const GOAL_OPTIONS: LessonGoal[] = [
 
 /** Cel lekcji — twardy limit wyboru. */
 const MAX_GOALS = 3
-const METHOD_OPTIONS = ["Burza mózgów", "Aktywizująca", "Utrwalająca", "Praca z tekstem", "Dyskusja"]
+const METHOD_OPTIONS = [
+  "Burza mózgów",
+  "Aktywizująca",
+  "Utrwalająca",
+  "Praca z tekstem",
+  "Dyskusja",
+]
 const FORM_OPTIONS = ["Cała klasa", "Pary", "Grupy", "Indywidualnie"]
 const EQUIPMENT_OPTIONS = ["Rzutnik", "Tablica interaktywna", "Brak sprzętu"]
 
@@ -128,13 +128,11 @@ export function BriefScreen() {
   const chaptersQuery = useChapters(brief.topicSource === "textbook" ? brief.textbookId : null)
 
   const chosenTextbookTitle = brief.textbookId
-    ? (pickedTextbook?.id === brief.textbookId ? pickedTextbook.title : null) ??
+    ? ((pickedTextbook?.id === brief.textbookId ? pickedTextbook.title : null) ??
       textbookQuery.data?.title ??
-      null
+      null)
     : null
-  const selectedChapters = (chaptersQuery.data ?? []).filter((c) =>
-    brief.chapterIds.includes(c.id)
-  )
+  const selectedChapters = (chaptersQuery.data ?? []).filter((c) => brief.chapterIds.includes(c.id))
   const [curriculumChapter, setCurriculumChapter] = useState<Chapter | null>(null)
 
   // Custom goal — anything in brief.goals outside the predefined list.
@@ -340,7 +338,7 @@ export function BriefScreen() {
               onChange={(event) =>
                 patchBrief({ customTopic: event.target.value === "" ? null : event.target.value })
               }
-              placeholder={"Np. Rodzina — słownictwo i czasownik „haben\""}
+              placeholder={'Np. Rodzina — słownictwo i czasownik „haben"'}
               className="h-11 px-3"
             />
           )}
@@ -428,7 +426,9 @@ export function BriefScreen() {
                 <ChipGroup
                   options={EQUIPMENT_OPTIONS}
                   selected={brief.equipment}
-                  onToggle={(value) => patchBrief({ equipment: toggleItem(brief.equipment, value) })}
+                  onToggle={(value) =>
+                    patchBrief({ equipment: toggleItem(brief.equipment, value) })
+                  }
                 />
               </div>
             </CardContent>
@@ -463,9 +463,7 @@ export function BriefScreen() {
       {/* Sticky CTA */}
       <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-background/95 backdrop-blur-sm">
         <div className="mx-auto flex max-w-[720px] flex-col gap-2 px-4 pt-3 pb-[max(--spacing(3),env(safe-area-inset-bottom))]">
-          {!valid && hint && (
-            <p className="text-center text-sm text-muted-foreground">{hint}</p>
-          )}
+          {!valid && hint && <p className="text-center text-sm text-muted-foreground">{hint}</p>}
           <Button className="h-12 w-full text-base" disabled={!valid} onClick={handleSubmit}>
             {hasPlan ? "Zaplanuj od nowa" : "Zaplanuj lekcję"}
           </Button>

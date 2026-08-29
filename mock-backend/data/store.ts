@@ -49,11 +49,7 @@ export function currentDoc(plan: PlanState): LessonDoc {
   return currentVersion(plan).doc
 }
 
-export function pushVersion(
-  plan: PlanState,
-  doc: LessonDoc,
-  reason: VersionReason
-): LessonVersion {
+export function pushVersion(plan: PlanState, doc: LessonDoc, reason: VersionReason): LessonVersion {
   const version: LessonVersion = {
     id: nextId("ver"),
     label: `v${plan.versions.length + 1}`,

@@ -7,10 +7,36 @@ import type { Exam } from "../../model/types"
 import { TASK_TYPE_LABELS } from "./exam-config"
 
 const TRANSLITERATION: Record<string, string> = {
-  ą: "a", ć: "c", ę: "e", ł: "l", ń: "n", ó: "o", ś: "s", ź: "z", ż: "z",
-  Ą: "A", Ć: "C", Ę: "E", Ł: "L", Ń: "N", Ó: "O", Ś: "S", Ź: "Z", Ż: "Z",
-  ä: "ae", ö: "oe", ü: "ue", ß: "ss", Ä: "Ae", Ö: "Oe", Ü: "Ue",
-  "—": "-", "·": "-", "„": '"', "”": '"', "…": "...",
+  ą: "a",
+  ć: "c",
+  ę: "e",
+  ł: "l",
+  ń: "n",
+  ó: "o",
+  ś: "s",
+  ź: "z",
+  ż: "z",
+  Ą: "A",
+  Ć: "C",
+  Ę: "E",
+  Ł: "L",
+  Ń: "N",
+  Ó: "O",
+  Ś: "S",
+  Ź: "Z",
+  Ż: "Z",
+  ä: "ae",
+  ö: "oe",
+  ü: "ue",
+  ß: "ss",
+  Ä: "Ae",
+  Ö: "Oe",
+  Ü: "Ue",
+  "—": "-",
+  "·": "-",
+  "„": '"',
+  "”": '"',
+  "…": "...",
 }
 
 function toAscii(text: string): string {
@@ -32,7 +58,11 @@ function buildExamPdf(exam: Exam): Blob {
       size: 10,
       gapBefore: 18,
     },
-    { text: "Imie i nazwisko: ............................  Klasa: ......", size: 10, gapBefore: 20 },
+    {
+      text: "Imie i nazwisko: ............................  Klasa: ......",
+      size: 10,
+      gapBefore: 20,
+    },
   ]
   exam.tasks.forEach((task, i) => {
     lines.push({

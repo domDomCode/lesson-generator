@@ -133,7 +133,6 @@ export function ExamScreen() {
             ))}
           </CardContent>
         </Card>
-
       </div>
 
       {exam && <ExamPreview exam={exam} ref={previewRef} />}

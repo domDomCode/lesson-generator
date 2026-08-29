@@ -67,10 +67,7 @@ export function projectBlockChange(
   newMinutes: number,
   lessonMinutes: number
 ): { totalMinutes: number; overflowMinutes: number; spareMinutes: number } {
-  const total = blocks.reduce(
-    (sum, b) => sum + (b.id === blockId ? newMinutes : b.minutes),
-    0
-  )
+  const total = blocks.reduce((sum, b) => sum + (b.id === blockId ? newMinutes : b.minutes), 0)
   return {
     totalMinutes: total,
     overflowMinutes: Math.max(0, total - lessonMinutes),
@@ -127,9 +124,6 @@ export function buildAutoFitProposal(
   }
   if (Object.keys(changes).length === 0) return null
 
-  const resulting = blocks.reduce(
-    (sum, b) => sum + (changes[b.id]?.to ?? b.minutes),
-    0
-  )
+  const resulting = blocks.reduce((sum, b) => sum + (changes[b.id]?.to ?? b.minutes), 0)
   return { proposalId, protectedBlockId, changes, resultingMinutes: resulting }
 }

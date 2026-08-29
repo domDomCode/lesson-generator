@@ -53,7 +53,10 @@ function SheetContent({
         {...props}
       >
         {/* Grab handle — visual affordance only, dismissal is via overlay/X. */}
-        <div aria-hidden className="mx-auto mt-2 h-1 w-9 shrink-0 rounded-full bg-border md:hidden" />
+        <div
+          aria-hidden
+          className="mx-auto mt-2 h-1 w-9 shrink-0 rounded-full bg-border md:hidden"
+        />
         {showCloseButton && (
           <DialogPrimitive.Close className="absolute top-3 right-3 flex size-11 md:top-4 md:right-4 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">
             <X className="size-5" />

@@ -18,7 +18,14 @@ import { Timeline } from "../../components/timeline"
 import { restoreVersion, setMaterialStatus } from "../../data/api"
 import { startGeneration } from "../../data/generation"
 import { computeBudget } from "../../model/budget"
-import type { BlockId, LessonDoc, LessonVersion, Material, PlanId, VersionId } from "../../model/types"
+import type {
+  BlockId,
+  LessonDoc,
+  LessonVersion,
+  Material,
+  PlanId,
+  VersionId,
+} from "../../model/types"
 import { scrollToBlock } from "../../state/active-block"
 import {
   dispatch,
@@ -74,7 +81,7 @@ export function PlanScreen() {
   const isGenerating = phase === "structure" || phase === "content"
   const isPreview = previewedVersionId != null
   const previewedVersion = isPreview
-    ? versions.find((v) => v.id === previewedVersionId) ?? null
+    ? (versions.find((v) => v.id === previewedVersionId) ?? null)
     : null
 
   const planId: PlanId | null = doc?.planId ?? null
@@ -82,14 +89,22 @@ export function PlanScreen() {
 
   // Budget from effectiveMinutes so an autofit preview animates the bar.
   const budget = useMemo(
-    () => computeBudget(blocks.map((b) => ({ ...b, minutes: b.effectiveMinutes })), lessonMinutes),
+    () =>
+      computeBudget(
+        blocks.map((b) => ({ ...b, minutes: b.effectiveMinutes })),
+        lessonMinutes
+      ),
     [blocks, lessonMinutes]
   )
 
   const materialsCount = useMemo(() => countMaterials(doc), [doc])
 
   const showRepairBar =
-    phase === "done" && !isPreview && autofit == null && budget.overflowMinutes > 0 && planId != null
+    phase === "done" &&
+    !isPreview &&
+    autofit == null &&
+    budget.overflowMinutes > 0 &&
+    planId != null
 
   const changeMaterialStatus = (material: Material, status: "accepted" | "rejected") => {
     if (isPreview || planId == null) return
@@ -125,8 +140,8 @@ export function PlanScreen() {
         <>
           {showStreamDisclaimer && (
             <p className="mt-3 rounded-md bg-muted px-3 py-2 text-xs text-muted-foreground">
-              Treść pojawia się na żywo tylko na komputerze — na telefonie
-              (ograniczenie mocków) cały plan wyświetli się naraz.
+              Treść pojawia się na żywo tylko na komputerze — na telefonie (ograniczenie mocków)
+              cały plan wyświetli się naraz.
             </p>
           )}
           <div className="mt-3 flex min-h-11 items-center gap-2 rounded-lg bg-card px-3 text-sm text-muted-foreground ring-1 ring-foreground/5">
@@ -300,7 +315,12 @@ function SummaryLine({
           ))}
         </ul>
         <div className="py-1.5">
-          <Button size="sm" variant="ghost" className="-ml-2 text-primary" onClick={onOpenMaterials}>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="-ml-2 text-primary"
+            onClick={onOpenMaterials}
+          >
             Przejrzyj materiały ({materialsCount})
           </Button>
         </div>

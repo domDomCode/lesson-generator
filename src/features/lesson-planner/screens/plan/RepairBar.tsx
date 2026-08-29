@@ -49,11 +49,7 @@ export function RepairBar({
       <span className="font-medium text-warning">
         Przekroczono o {formatMinutes(overflowMinutes)}
       </span>
-      <Button
-        size="sm"
-        onClick={() => autofit.mutate()}
-        disabled={autofit.isPending}
-      >
+      <Button size="sm" onClick={() => autofit.mutate()} disabled={autofit.isPending}>
         {autofit.isPending && <LoaderCircle className="animate-spin" aria-hidden />}
         Dopasuj automatycznie
       </Button>

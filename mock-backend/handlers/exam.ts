@@ -1,8 +1,5 @@
 import { HttpResponse, delay, http } from "msw"
-import type {
-  Exam,
-  ExamGenerateRequest,
-} from "@/features/lesson-planner/model/types"
+import type { Exam, ExamGenerateRequest } from "@/features/lesson-planner/model/types"
 import { buildExamTasks, estimateExamMinutes } from "../data/lesson-fixtures"
 import { getPlan, nextId } from "../data/store"
 
@@ -23,10 +20,7 @@ export const examHandlers = [
 
     const tasks = buildExamTasks(body.counts, body.difficulty, () => nextId("task"))
     if (tasks.length === 0) {
-      return HttpResponse.json(
-        { message: "Wybierz co najmniej jedno zadanie" },
-        { status: 400 }
-      )
+      return HttpResponse.json({ message: "Wybierz co najmniej jedno zadanie" }, { status: 400 })
     }
 
     const exam: Exam = {

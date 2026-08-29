@@ -40,9 +40,7 @@ function Chip({
       >
         {children}
       </span>
-      <span className="col-start-1 row-start-1 flex items-center gap-1.5">
-        {children}
-      </span>
+      <span className="col-start-1 row-start-1 flex items-center gap-1.5">{children}</span>
     </button>
   )
 }

@@ -109,10 +109,7 @@ export function TimeBudgetBar({
       <div className="flex items-end gap-3">
         {/* Clip wrapper: its right padding IS the gutter, so segments may
             extend into it and are hard-clipped exactly at trackPx + gutterPx. */}
-        <div
-          className="min-w-0 flex-1 overflow-hidden pt-5"
-          style={{ paddingRight: gutterPx }}
-        >
+        <div className="min-w-0 flex-1 overflow-hidden pt-5" style={{ paddingRight: gutterPx }}>
           <div ref={trackRef} className="relative h-7">
             {/* Base track — the lesson itself. Full grey while generating. */}
             <div
@@ -212,9 +209,7 @@ export function TimeBudgetBar({
 
           {/* Caption row is always reserved so states never shift the layout. */}
           <div className="mt-1.5 h-4 text-right text-xs text-muted-foreground">
-            {showSegments && budget.state === "spare"
-              ? `${budget.spareMinutes} min zapasu`
-              : null}
+            {showSegments && budget.state === "spare" ? `${budget.spareMinutes} min zapasu` : null}
           </div>
         </div>
 
@@ -224,10 +219,7 @@ export function TimeBudgetBar({
           ) : (
             <>
               <span
-                className={cn(
-                  "font-medium",
-                  overflowing ? "text-destructive" : "text-foreground"
-                )}
+                className={cn("font-medium", overflowing ? "text-destructive" : "text-foreground")}
               >
                 {budget.totalMinutes}
               </span>

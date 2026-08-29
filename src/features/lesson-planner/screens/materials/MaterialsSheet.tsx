@@ -45,8 +45,7 @@ export function MaterialsSheet({ open, onOpenChange }: MaterialsSheetProps) {
   const defaultBlock =
     doc.blocks.find((b) => b.materials.status !== "none") ?? doc.blocks[0] ?? null
   const targetBlock =
-    (pickedBlockId != null ? doc.blocks.find((b) => b.id === pickedBlockId) : null) ??
-    defaultBlock
+    (pickedBlockId != null ? doc.blocks.find((b) => b.id === pickedBlockId) : null) ?? defaultBlock
 
   async function submitSearch(e: FormEvent) {
     e.preventDefault()

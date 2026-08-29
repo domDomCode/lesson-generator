@@ -16,23 +16,12 @@ import type {
   ReviseRequest,
   ReviseResponse,
 } from "@/features/lesson-planner/model/types"
-import {
-  buildAutoFitProposal,
-  totalMinutes,
-} from "@/features/lesson-planner/model/budget"
-import {
-  createPlan,
-  currentDoc,
-  deepCopy,
-  getPlan,
-  nextId,
-  pushVersion,
-} from "../data/store"
+import { buildAutoFitProposal, totalMinutes } from "@/features/lesson-planner/model/budget"
+import { createPlan, currentDoc, deepCopy, getPlan, nextId, pushVersion } from "../data/store"
 import { sseResponse, sleep } from "./sse"
 import type { SseSend } from "./sse"
 
-const planNotFound = () =>
-  HttpResponse.json({ message: "Nie znaleziono planu" }, { status: 404 })
+const planNotFound = () => HttpResponse.json({ message: "Nie znaleziono planu" }, { status: 404 })
 
 // ---------------------------------------------------------------------------
 // SSE generation choreography (~8–10 s total)
@@ -124,8 +113,7 @@ function applyRevision(doc: LessonDoc, prompt: string): void {
   quiz.method = "Gra dydaktyczna"
   quiz.content = {
     status: "ready",
-    text:
-      "Uczniowie dołączają do Kahoota na telefonach lub tabletach i rozwiązują quiz ze słownictwa rodzinnego: der Vater, die Mutter, die Geschwister. Pytania obejmują też formy czasownika haben, np. „Ich ___ einen Bruder\". Wyniki pojawiają się na rzutniku, a najlepsza trójka zbiera brawa klasy.",
+    text: 'Uczniowie dołączają do Kahoota na telefonach lub tabletach i rozwiązują quiz ze słownictwa rodzinnego: der Vater, die Mutter, die Geschwister. Pytania obejmują też formy czasownika haben, np. „Ich ___ einen Bruder". Wyniki pojawiają się na rzutniku, a najlepsza trójka zbiera brawa klasy.',
   }
 }
 
@@ -153,8 +141,7 @@ export const planHandlers = [
       })
       send({
         type: "status",
-        text:
-          brief.topicSource === "custom" ? "Analizuję temat" : "Analizuję Kapitel 3",
+        text: brief.topicSource === "custom" ? "Analizuję temat" : "Analizuję Kapitel 3",
       })
       await sleep(600)
       send({ type: "status", text: "Buduję strukturę lekcji" })

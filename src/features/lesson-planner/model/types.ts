@@ -71,9 +71,7 @@ export interface Material {
 }
 
 export type BlockContent =
-  | { status: "empty" }
-  | { status: "streaming"; text: string }
-  | { status: "ready"; text: string }
+  { status: "empty" } | { status: "streaming"; text: string } | { status: "ready"; text: string }
 
 export type MaterialSlot =
   /** Blok bez slotu materiałów (bloki 1, 4, 5) — brak wskaźnika w UI. */
@@ -261,9 +259,26 @@ export type ExamGenerateResponse = Exam
 // ---------------------------------------------------------------------------
 
 export type PlanStreamEvent =
-  | { type: "plan.meta"; planId: PlanId; versionId: VersionId; lessonMinutes: number; topic: string; subject: string; grade: string }
+  | {
+      type: "plan.meta"
+      planId: PlanId
+      versionId: VersionId
+      lessonMinutes: number
+      topic: string
+      subject: string
+      grade: string
+    }
   | { type: "status"; text: string }
-  | { type: "block.created"; blockId: BlockId; index: number; title: string; minutes: number; method: string; form: string; hasMaterials: boolean }
+  | {
+      type: "block.created"
+      blockId: BlockId
+      index: number
+      title: string
+      minutes: number
+      method: string
+      form: string
+      hasMaterials: boolean
+    }
   | { type: "phase"; phase: "content" }
   | { type: "block.content.start"; blockId: BlockId }
   | { type: "block.content.delta"; blockId: BlockId; text: string }
@@ -271,6 +286,13 @@ export type PlanStreamEvent =
   | { type: "materials.start"; blockId: BlockId }
   | { type: "materials.result"; blockId: BlockId; items: Material[] }
   | { type: "materials.error"; blockId: BlockId; message: string }
-  | { type: "done"; planId: PlanId; versionId: VersionId; totalMinutes: number; assumptions: string[]; agentSteps: string[] }
+  | {
+      type: "done"
+      planId: PlanId
+      versionId: VersionId
+      totalMinutes: number
+      assumptions: string[]
+      agentSteps: string[]
+    }
 
 export type PlanStreamEventType = PlanStreamEvent["type"]
