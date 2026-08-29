@@ -8,7 +8,7 @@ import * as React from "react"
 import { cn } from "@/shared/lib/utils"
 
 import type { BlockId, Material } from "../../model/types"
-import { setActiveBlockFromScroll, useIsActiveBlock } from "../../state/active-block"
+import { clearActiveBlock, setActiveBlockFromScroll, useIsActiveBlock } from "../../state/active-block"
 import type { BlockView, GenerationPhase } from "../../state/store"
 import { BlockCard } from "./block-card"
 
@@ -30,6 +30,15 @@ export function Timeline({
 }: TimelineProps) {
   const listRef = React.useRef<HTMLOListElement>(null)
   const idsKey = blocks.map((b) => b.id).join("|")
+  const spyEnabled = generationPhase === "done"
+
+  // The active-block highlight only tracks the reader once the plan has
+  // fully streamed in — while blocks and their content are still arriving
+  // the layout shifts under the reading line and the highlight would just
+  // flicker down the list. Leaving `done` (a regenerate) clears it.
+  React.useEffect(() => {
+    if (!spyEnabled) clearActiveBlock()
+  }, [spyEnabled])
 
   // Scroll-spy: a "reading line" that sweeps down the viewport with scroll
   // progress. At the top of the page the line sits at the viewport top, at
@@ -39,6 +48,7 @@ export function Timeline({
   // block — the first and last included — even when the scrollable range is
   // shorter than the viewport band would need.
   React.useEffect(() => {
+    if (!spyEnabled) return
     const root = listRef.current
     if (!root) return
     const cards = Array.from(root.querySelectorAll<HTMLElement>("[data-block-id]"))
@@ -82,7 +92,7 @@ export function Timeline({
       window.removeEventListener("resize", schedule)
       if (raf) cancelAnimationFrame(raf)
     }
-  }, [idsKey])
+  }, [idsKey, spyEnabled])
 
   return (
     <ol ref={listRef} className="flex flex-col">
@@ -182,19 +192,33 @@ function TimelineRail({
       >
         {block.index + 1}
       </span>
-      <div className="absolute top-10 left-1/2 w-14 -translate-x-1/2 text-center text-[11px] leading-tight text-muted-foreground tabular-nums">
-        {block.delta ? (
-          <>
-            <div>
-              <span className="line-through opacity-70">{block.delta.from}</span>
-              <span className="text-primary/70">→</span>
-              <span className="font-semibold text-primary">{block.delta.to}</span>
-            </div>
-            <div>min</div>
-          </>
-        ) : (
-          <span>{block.effectiveMinutes} min</span>
-        )}
+      <div className="absolute top-9 left-1/2 w-16 -translate-x-1/2 py-1.5">
+        {/* Soft vignette of page background so the label reads over the rail
+            line without a hard-edged plate — the radial mask feathers it out. */}
+        <span
+          aria-hidden
+          className="absolute inset-0 bg-background/85 backdrop-blur-sm"
+          style={{
+            maskImage:
+              "radial-gradient(ellipse 68% 58% at 50% 50%, #000 38%, transparent 84%)",
+            WebkitMaskImage:
+              "radial-gradient(ellipse 68% 58% at 50% 50%, #000 38%, transparent 84%)",
+          }}
+        />
+        <div className="relative text-center text-[11px] leading-tight text-muted-foreground tabular-nums">
+          {block.delta ? (
+            <>
+              <div>
+                <span className="line-through opacity-70">{block.delta.from}</span>
+                <span className="text-primary/70">→</span>
+                <span className="font-semibold text-primary">{block.delta.to}</span>
+              </div>
+              <div>min</div>
+            </>
+          ) : (
+            <span>{block.effectiveMinutes} min</span>
+          )}
+        </div>
       </div>
     </div>
   )

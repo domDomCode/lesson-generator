@@ -26,6 +26,16 @@ export function setActiveBlockFromScroll(blockId: BlockId | null) {
 }
 
 /**
+ * Drops any highlight and clears the tap-suppression window. Used when the
+ * plan leaves its finished state (a regenerate), so the scroll-spy starts
+ * from a clean slate once streaming completes again.
+ */
+export function clearActiveBlock() {
+  suppressSpyUntil = 0
+  emit(null)
+}
+
+/**
  * Called on budget-bar segment tap (and block-card tap): highlights the
  * block immediately and suppresses the spy long enough for the programmatic
  * smooth scroll to land without fighting it.
