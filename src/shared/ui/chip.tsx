@@ -6,10 +6,15 @@ import { cn } from "@/shared/lib/utils"
  * preferences). 44px tall: comfortably tappable one-handed. Selection is
  * communicated by colour and weight only — no icon, so toggling never
  * shifts the layout; aria-pressed carries the state for AT.
+ *
+ * The bump to semibold on selection would widen the label by a pixel or
+ * two, so an invisible bold copy is always laid out underneath to reserve
+ * the wider footprint — the visible label then swaps weight in place.
  */
 function Chip({
   className,
   selected = false,
+  children,
   ...props
 }: React.ComponentProps<"button"> & {
   selected?: boolean
@@ -20,7 +25,7 @@ function Chip({
       data-slot="chip"
       aria-pressed={selected}
       className={cn(
-        "inline-flex h-11 shrink-0 items-center gap-1.5 rounded-full border px-4 text-sm font-medium transition-colors select-none",
+        "inline-grid h-11 shrink-0 place-items-center rounded-full border px-4 text-sm font-medium transition-colors select-none",
         "outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:translate-y-px disabled:pointer-events-none disabled:opacity-50",
         selected
           ? "border-primary/60 bg-primary/10 font-semibold text-primary"
@@ -29,7 +34,15 @@ function Chip({
       )}
       {...props}
     >
-      {props.children}
+      <span
+        aria-hidden
+        className="pointer-events-none invisible col-start-1 row-start-1 flex items-center gap-1.5 font-semibold"
+      >
+        {children}
+      </span>
+      <span className="col-start-1 row-start-1 flex items-center gap-1.5">
+        {children}
+      </span>
     </button>
   )
 }

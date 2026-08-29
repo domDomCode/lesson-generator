@@ -106,7 +106,8 @@ export function MaterialCard({
               <DropdownMenuPrimitive.Content
                 align="start"
                 sideOffset={4}
-                className="z-[60] max-h-72 min-w-48 overflow-y-auto rounded-lg border border-border bg-card p-1 text-card-foreground shadow-lg data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95"
+                collisionPadding={16}
+                className="z-[60] max-h-72 min-w-48 max-w-[var(--radix-dropdown-menu-content-available-width)] overflow-y-auto rounded-lg border border-border bg-card p-1 text-card-foreground shadow-lg data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95"
               >
                 {otherBlocks.map((b) => (
                   <DropdownMenuPrimitive.Item
@@ -114,7 +115,7 @@ export function MaterialCard({
                     onSelect={() => moveMaterialToBlock(planId, material.id, b)}
                     className="flex min-h-11 cursor-default items-center rounded-md px-3 py-2 text-sm outline-none select-none data-[highlighted]:bg-muted"
                   >
-                    <span className="truncate">
+                    <span className="min-w-0 truncate">
                       {blockLabel(b)} · {b.title}
                     </span>
                   </DropdownMenuPrimitive.Item>

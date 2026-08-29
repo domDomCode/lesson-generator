@@ -95,18 +95,28 @@ export function PlanScreen() {
         </header>
       )}
 
-      {/* 2. Generation status line / error */}
+      {/* 2. Generation status / error. The status sits in the same card
+          shell the summary line will take (§3), with a version-pill
+          placeholder below (§4), so the budget bar and timeline don't
+          jump when generation completes. */}
       {isGenerating && (
-        <div className="mt-3 flex min-h-6 items-center gap-2 text-sm text-muted-foreground">
-          <LoaderCircle className="size-4 shrink-0 animate-spin text-primary" aria-hidden />
-          <span
-            key={generation.statusText}
-            className="animate-in fade-in-0 truncate duration-300"
-            aria-live="polite"
-          >
-            {generation.statusText.length > 0 ? generation.statusText : "Zaczynam układać plan"}
-          </span>
-        </div>
+        <>
+          <div className="mt-3 flex min-h-11 items-center gap-2 rounded-lg bg-card px-3 text-sm text-muted-foreground ring-1 ring-foreground/5">
+            <LoaderCircle className="size-4 shrink-0 animate-spin text-primary" aria-hidden />
+            <span
+              key={generation.statusText}
+              className="animate-in fade-in-0 truncate duration-300"
+              aria-live="polite"
+            >
+              {generation.statusText.length > 0 ? generation.statusText : "Zaczynam układać plan"}
+            </span>
+          </div>
+          <div className="mt-3 flex items-center gap-1.5" aria-hidden>
+            {Array.from({ length: Math.max(versions.length, 1) }).map((_, i) => (
+              <div key={i} className="shimmer h-8 w-11 rounded-full" />
+            ))}
+          </div>
+        </>
       )}
       {phase === "error" && (
         <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg bg-destructive/10 px-3 py-2.5">
