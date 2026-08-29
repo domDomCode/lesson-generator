@@ -2,6 +2,7 @@
 // defaults and the live estimate math. The screen owns these values until
 // generation — the server's Exam response is the source of truth afterwards.
 
+import { tasksNom } from "../../model/plural"
 import type { ExamDifficulty, ExamTaskType } from "../../model/types"
 
 export type ExamCounts = Record<ExamTaskType, number>
@@ -54,16 +55,7 @@ export function estimateExam(counts: ExamCounts): ExamEstimate {
   return { taskCount, minutes, points }
 }
 
-/** Polish plural: 1 zadanie · 2–4 zadania (poza 12–14) · 5+ zadań. */
-export function taskNoun(n: number): string {
-  if (n === 1) return "zadanie"
-  const tens = n % 100
-  const ones = n % 10
-  if (ones >= 2 && ones <= 4 && (tens < 12 || tens > 14)) return "zadania"
-  return "zadań"
-}
-
 /** `6 zadań · ok. 20 min · 15 pkt` — "pkt" jest nieodmienne. */
 export function formatEstimate(e: ExamEstimate): string {
-  return `${e.taskCount} ${taskNoun(e.taskCount)} · ok. ${e.minutes} min · ${e.points} pkt`
+  return `${e.taskCount} ${tasksNom(e.taskCount)} · ok. ${e.minutes} min · ${e.points} pkt`
 }

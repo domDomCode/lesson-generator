@@ -255,6 +255,11 @@ function reduceGenerationEvent(state: PlannerState, event: PlanStreamEvent): Pla
         generation: { phase: "done", statusText: "", error: null },
       }
     }
+    // The union above is exhaustive at compile time; this guards a malformed
+    // wire frame (handleFrame only checks that `type` is a string) so a
+    // stray event can never make the reducer return undefined.
+    default:
+      return state
   }
 }
 

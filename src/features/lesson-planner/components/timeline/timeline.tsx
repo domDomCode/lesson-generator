@@ -7,10 +7,19 @@ import * as React from "react"
 
 import { cn } from "@/shared/lib/utils"
 
+import type { BlockId, Material } from "../../model/types"
 import { setActiveBlockFromScroll, useActiveBlockId } from "../../state/active-block"
-import type { BlockView } from "../../state/store"
-import type { TimelineProps } from "../contracts"
+import type { BlockView, GenerationPhase } from "../../state/store"
 import { BlockCard } from "./block-card"
+
+export interface TimelineProps {
+  blocks: BlockView[]
+  generationPhase: GenerationPhase
+  /** Opens the block bottom sheet. */
+  onBlockTap: (blockId: BlockId) => void
+  onMaterialAccept: (material: Material) => void
+  onMaterialReject: (material: Material) => void
+}
 
 export function Timeline({
   blocks,

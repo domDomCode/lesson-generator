@@ -15,9 +15,11 @@ import { toast } from "@/shared/ui/toast"
 
 import { TimeBudgetBar } from "../../components/time-budget-bar"
 import { Timeline } from "../../components/timeline/timeline"
-import { restoreVersion, setMaterialStatus } from "../../data/api"
+import { restoreVersion } from "../../data/api"
 import { startGeneration } from "../../data/generation"
+import { acceptMaterial, rejectMaterial } from "../../data/materials-actions"
 import { computeBudget } from "../../model/budget"
+import { formatBlocks, formatMaterials } from "../../model/plural"
 import type {
   BlockId,
   LessonDoc,
@@ -39,7 +41,6 @@ import { MaterialsSheet } from "../materials/materials-sheet"
 import { AutoFitFooter } from "./auto-fit-footer"
 import { PromptBar } from "./prompt-bar"
 import { RepairBar } from "./repair-bar"
-import { formatBlocks, formatMaterials } from "./plural"
 
 /**
  * MSW streams its mock SSE response to the service worker through a
@@ -108,11 +109,8 @@ export function PlanScreen() {
 
   const changeMaterialStatus = (material: Material, status: "accepted" | "rejected") => {
     if (isPreview || planId == null) return
-    dispatch({ type: "material/statusChanged", materialId: material.id, status })
-    toast(status === "accepted" ? "Dodano" : "Odrzucono")
-    setMaterialStatus(planId, material.id, { status }).catch(() =>
-      toast("Nie udało się zapisać zmiany. Spróbuj ponownie.")
-    )
+    if (status === "accepted") acceptMaterial(planId, material.id)
+    else rejectMaterial(planId, material.id)
   }
 
   return (

@@ -10,8 +10,22 @@ import { useIsMobile } from "@/shared/hooks/use-mobile"
 import { cn } from "@/shared/lib/utils"
 
 import type { BudgetSummary } from "../model/budget"
+import { minutesAcc, minutesNom } from "../model/plural"
+import type { AutoFitPreview, BlockId } from "../model/types"
 import { useActiveBlockId } from "../state/active-block"
-import type { TimeBudgetBarProps } from "./contracts"
+
+export interface TimeBudgetBarProps {
+  budget: BudgetSummary
+  /**
+   * Generation in progress: bar is greyed out, shows no numbers, and fills
+   * in one motion when this flips back to false.
+   */
+  disabled?: boolean
+  /** Uncommitted autofit preview — bar renders proposed segment widths. */
+  preview?: AutoFitPreview | null
+  /** Tap = scroll timeline to block + highlight (use scrollToBlock()). */
+  onSegmentTap: (blockId: BlockId) => void
+}
 
 /**
  * Permanent right-hand gutter overflow can extend into — nothing reflows.
@@ -23,24 +37,15 @@ const GUTTER_MOBILE_PX = 28
 /** Segments narrower than this hide their minutes digit. */
 const MIN_LABEL_PX = 18
 
-/** Polish plural picker: 1 minuta, 2–4 minuty, 5+ minut (and 22, 23, 24…). */
-function pluralPl(n: number, one: string, few: string, many: string): string {
-  if (n === 1) return one
-  const digit = n % 10
-  const tens = n % 100
-  if (digit >= 2 && digit <= 4 && (tens < 12 || tens > 14)) return few
-  return many
-}
-
 function budgetAnnouncement(budget: BudgetSummary): string {
   const base = `${budget.totalMinutes} z ${budget.lessonMinutes} ${
     budget.lessonMinutes === 1 ? "minuty" : "minut"
   }`
   if (budget.state === "spare") {
-    return `${base}, ${budget.spareMinutes} ${pluralPl(budget.spareMinutes, "minuta", "minuty", "minut")} zapasu`
+    return `${base}, ${budget.spareMinutes} ${minutesNom(budget.spareMinutes)} zapasu`
   }
   if (budget.state === "overflow") {
-    return `${base}, przekroczono o ${budget.overflowMinutes} ${pluralPl(budget.overflowMinutes, "minutę", "minuty", "minut")}`
+    return `${base}, przekroczono o ${budget.overflowMinutes} ${minutesAcc(budget.overflowMinutes)}`
   }
   return base
 }
@@ -145,7 +150,7 @@ export function TimeBudgetBar({
                 <button
                   key={seg.blockId}
                   type="button"
-                  aria-label={`Blok ${seg.index + 1}: ${seg.title}, ${seg.minutes} ${pluralPl(seg.minutes, "minuta", "minuty", "minut")}`}
+                  aria-label={`Blok ${seg.index + 1}: ${seg.title}, ${seg.minutes} ${minutesNom(seg.minutes)}`}
                   aria-current={isActive ? "true" : undefined}
                   onClick={() => onSegmentTap(seg.blockId)}
                   className="absolute inset-y-0 rounded-[5px] outline-none transition-[left,width] duration-300 ease-out before:absolute before:inset-x-0 before:-inset-y-2 before:content-[''] focus-visible:z-20 focus-visible:outline-2 focus-visible:-outline-offset-2"

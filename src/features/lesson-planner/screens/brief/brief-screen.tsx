@@ -18,6 +18,7 @@ import { Textarea } from "@/shared/ui/textarea"
 
 import { startGeneration } from "../../data/generation"
 import { useChapters, useTextbook } from "../../data/textbooks"
+import { plural } from "../../model/plural"
 import type { Brief, Chapter, LessonGoal, Textbook } from "../../model/types"
 import { dispatch, getPlannerState, usePlannerStore } from "../../state/store"
 import { TextbookSheet } from "./textbook-sheet"
@@ -84,10 +85,7 @@ function missingHint(brief: Brief): string | null {
 
 /** "1 wybrana", "2 wybrane", "5 wybranych" — Preferencje trigger count. */
 function selectedCountLabel(count: number): string {
-  if (count === 1) return "1 wybrana"
-  const lastDigit = count % 10
-  const few = lastDigit >= 2 && lastDigit <= 4 && (count % 100 < 12 || count % 100 > 14)
-  return `${count} ${few ? "wybrane" : "wybranych"}`
+  return `${count} ${plural(count, { one: "wybrana", few: "wybrane", many: "wybranych" })}`
 }
 
 function GroupLabel({ children }: { children: ReactNode }) {

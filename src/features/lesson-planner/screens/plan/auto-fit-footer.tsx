@@ -10,7 +10,7 @@ import { toast } from "@/shared/ui/toast"
 import { applyAutoFit } from "../../data/api"
 import type { AutoFitPreview, PlanId } from "../../model/types"
 import { dispatch } from "../../state/store"
-import { formatBlocks } from "./plural"
+import { formatBlocks } from "../../model/plural"
 
 export function AutoFitFooter({
   planId,

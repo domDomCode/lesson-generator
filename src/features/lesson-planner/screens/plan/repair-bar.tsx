@@ -10,7 +10,7 @@ import { toast } from "@/shared/ui/toast"
 import { patchPlan, requestAutoFit } from "../../data/api"
 import type { PlanId } from "../../model/types"
 import { dispatch, getPlannerState } from "../../state/store"
-import { formatMinutes } from "./plural"
+import { formatMinutes } from "../../model/plural"
 
 /** Lesson lengths a teacher can bump to — next step above the current one. */
 const LESSON_LENGTH_STEPS = [30, 45, 60, 90]

@@ -10,13 +10,8 @@ import { cn } from "@/shared/lib/utils"
 import { Button } from "@/shared/ui/button"
 import { InfoChip } from "@/shared/ui/chip"
 
-import {
-  acceptMaterial,
-  blockLabel,
-  moveMaterialToBlock,
-  rejectMaterial,
-} from "../../data/materials-actions"
-import type { Block, Material, PlanId } from "../../model/types"
+import { blockLabel } from "../../model/labels"
+import type { Block, Material } from "../../model/types"
 
 const kindIcon: Record<Material["kind"], typeof Play> = {
   video: Play,
@@ -27,19 +22,23 @@ const kindIcon: Record<Material["kind"], typeof Play> = {
 }
 
 export function MaterialCard({
-  planId,
   material,
   blocks,
   showRationale = false,
   moveLabel = "Przenieś",
+  onAccept,
+  onReject,
+  onMove,
 }: {
-  planId: PlanId
   material: Material
   /** All blocks of the doc — the move menu lists every block but the current one. */
   blocks: Block[]
   /** The review sheet shows the one-line rationale; the block sheet stays compact. */
   showRationale?: boolean
   moveLabel?: string
+  onAccept: () => void
+  onReject: () => void
+  onMove: (toBlock: Block) => void
 }) {
   const Icon = kindIcon[material.kind]
   const otherBlocks = blocks.filter((b) => b.id !== material.blockId)
@@ -77,20 +76,12 @@ export function MaterialCard({
       </div>
       <div className="mt-1 -mb-1 flex flex-wrap items-center">
         {material.status !== "accepted" && (
-          <Button
-            variant="ghost"
-            className="h-11 px-3 text-primary"
-            onClick={() => acceptMaterial(planId, material.id)}
-          >
+          <Button variant="ghost" className="h-11 px-3 text-primary" onClick={onAccept}>
             Dodaj
           </Button>
         )}
         {material.status !== "rejected" && (
-          <Button
-            variant="ghost"
-            className="h-11 px-3 text-muted-foreground"
-            onClick={() => rejectMaterial(planId, material.id)}
-          >
+          <Button variant="ghost" className="h-11 px-3 text-muted-foreground" onClick={onReject}>
             Odrzuć
           </Button>
         )}
@@ -112,7 +103,7 @@ export function MaterialCard({
                 {otherBlocks.map((b) => (
                   <DropdownMenuPrimitive.Item
                     key={b.id}
-                    onSelect={() => moveMaterialToBlock(planId, material.id, b)}
+                    onSelect={() => onMove(b)}
                     className="flex min-h-11 cursor-default items-center rounded-md px-3 py-2 text-sm outline-none select-none data-[highlighted]:bg-muted"
                   >
                     <span className="min-w-0 truncate">

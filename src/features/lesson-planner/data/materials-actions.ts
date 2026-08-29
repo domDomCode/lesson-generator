@@ -9,11 +9,6 @@ import type { Block, BlockId, PlanId } from "../model/types"
 import { dispatch } from "../state/store"
 import { moveMaterial, searchMaterials, setMaterialStatus } from "./api"
 
-/** Display label used everywhere a block is referenced: „Blok 2". */
-export function blockLabel(block: Pick<Block, "index">): string {
-  return `Blok ${block.index + 1}`
-}
-
 export function acceptMaterial(planId: PlanId, materialId: string) {
   dispatch({ type: "material/statusChanged", materialId, status: "accepted" })
   toast("Dodano")

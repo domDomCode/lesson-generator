@@ -17,8 +17,13 @@ import {
   SheetTitle,
 } from "@/shared/ui/sheet"
 
-import type { MaterialsSheetProps } from "../../components/contracts"
-import { blockLabel, runMaterialSearch } from "../../data/materials-actions"
+import {
+  acceptMaterial,
+  moveMaterialToBlock,
+  rejectMaterial,
+  runMaterialSearch,
+} from "../../data/materials-actions"
+import { blockLabel } from "../../model/labels"
 import type { Block, BlockId } from "../../model/types"
 import { selectVisibleDoc, usePlannerStore } from "../../state/store"
 import { MaterialCard } from "./material-card"
@@ -29,6 +34,11 @@ function isVisibleGroup(block: Block): boolean {
     (block.materials.status === "ready" && block.materials.items.length > 0) ||
     block.materials.status === "searching"
   )
+}
+
+interface MaterialsSheetProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
 export function MaterialsSheet({ open, onOpenChange }: MaterialsSheetProps) {
@@ -87,10 +97,12 @@ export function MaterialsSheet({ open, onOpenChange }: MaterialsSheetProps) {
                   block.materials.items.map((material) => (
                     <MaterialCard
                       key={material.id}
-                      planId={doc.planId}
                       material={material}
                       blocks={doc.blocks}
                       showRationale
+                      onAccept={() => acceptMaterial(doc.planId, material.id)}
+                      onReject={() => rejectMaterial(doc.planId, material.id)}
+                      onMove={(toBlock) => moveMaterialToBlock(doc.planId, material.id, toBlock)}
                     />
                   ))
                 )}

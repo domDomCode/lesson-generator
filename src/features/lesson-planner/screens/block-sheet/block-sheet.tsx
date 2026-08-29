@@ -24,11 +24,17 @@ import {
 import { Textarea } from "@/shared/ui/textarea"
 import { toast } from "@/shared/ui/toast"
 
-import type { BlockSheetProps } from "../../components/contracts"
 import { patchBlock } from "../../data/api"
-import { blockLabel, runMaterialSearch } from "../../data/materials-actions"
+import {
+  acceptMaterial,
+  moveMaterialToBlock,
+  rejectMaterial,
+  runMaterialSearch,
+} from "../../data/materials-actions"
 import { projectBlockChange } from "../../model/budget"
-import type { Block, BlockPatchRequest, LessonDoc } from "../../model/types"
+import { blockLabel } from "../../model/labels"
+import { isPaucal, minutesAcc, minutesNom } from "../../model/plural"
+import type { Block, BlockId, BlockPatchRequest, LessonDoc } from "../../model/types"
 import { dispatch, selectVisibleDoc, usePlannerStore } from "../../state/store"
 import { MaterialCard } from "../materials/material-card"
 
@@ -52,27 +58,6 @@ function withValue(options: string[], value: string): string[] {
   return options.includes(value) ? options : [value, ...options]
 }
 
-// --- Polish plurals for the consequence line -------------------------------
-
-/** 2–4, 22–24, 32–34… (but not 12–14) take the paucal form. */
-function isPaucal(n: number): boolean {
-  const units = n % 10
-  const tens = n % 100
-  return units >= 2 && units <= 4 && !(tens >= 12 && tens <= 14)
-}
-
-/** Accusative, after „o": 1 minutę / 3 minuty / 5 minut. */
-function minutesAcc(n: number): string {
-  if (n === 1) return "minutę"
-  return isPaucal(n) ? "minuty" : "minut"
-}
-
-/** Nominative: 1 minuta / 3 minuty / 5 minut. */
-function minutesNom(n: number): string {
-  if (n === 1) return "minuta"
-  return isPaucal(n) ? "minuty" : "minut"
-}
-
 function consequenceText(
   projection: { overflowMinutes: number; spareMinutes: number },
   lessonMinutes: number
@@ -89,6 +74,12 @@ function consequenceText(
 }
 
 // --- sheet shell -----------------------------------------------------------
+
+interface BlockSheetProps {
+  /** Block to show; null = sheet closed. */
+  blockId: BlockId | null
+  onOpenChange: (open: boolean) => void
+}
 
 export function BlockSheet({ blockId, onOpenChange }: BlockSheetProps) {
   const doc = usePlannerStore(selectVisibleDoc)
@@ -308,10 +299,12 @@ function BlockSheetContent({
               {visibleItems.map((material) => (
                 <MaterialCard
                   key={material.id}
-                  planId={planId}
                   material={material}
                   blocks={doc.blocks}
                   moveLabel="Przenieś do innego bloku"
+                  onAccept={() => acceptMaterial(planId, material.id)}
+                  onReject={() => rejectMaterial(planId, material.id)}
+                  onMove={(toBlock) => moveMaterialToBlock(planId, material.id, toBlock)}
                 />
               ))}
               <p className="text-sm text-muted-foreground">
