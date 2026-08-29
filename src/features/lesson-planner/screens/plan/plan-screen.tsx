@@ -153,9 +153,11 @@ export function PlanScreen() {
             </span>
           </div>
           <div className="mt-3 flex items-center gap-1.5" aria-hidden>
-            {Array.from({ length: Math.max(versions.length, 1) }).map((_, i) => (
-              <div key={i} className="shimmer h-8 w-11 rounded-full" />
-            ))}
+            {Array.from({ length: Math.max(versions.length, 1) }, (_, i) => `pill-${i}`).map(
+              (key) => (
+                <div key={key} className="shimmer h-8 w-11 rounded-full" />
+              )
+            )}
           </div>
         </>
       )}

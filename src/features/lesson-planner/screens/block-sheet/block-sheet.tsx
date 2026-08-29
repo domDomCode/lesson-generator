@@ -3,7 +3,7 @@
 // until „Zapisz". The consequence line under the stepper tells the user what
 // a time change does to the whole plan BEFORE she commits it.
 
-import { useState, type FormEvent } from "react"
+import { useEffect, useRef, useState, type FormEvent } from "react"
 import { ChevronDown, Loader2, TriangleAlert } from "lucide-react"
 
 import { cn } from "@/shared/lib/utils"
@@ -115,6 +115,13 @@ function BlockSheetContent({
   const [editingContent, setEditingContent] = useState(false)
   const [openPicker, setOpenPicker] = useState<"method" | "form" | null>(null)
 
+  // „Edytuj ręcznie" swaps the rendered paragraph for a textarea — move
+  // focus into it once it's mounted so the keyboard user isn't stranded.
+  const contentRef = useRef<HTMLTextAreaElement>(null)
+  useEffect(() => {
+    if (editingContent) contentRef.current?.focus()
+  }, [editingContent])
+
   const [searchQuery, setSearchQuery] = useState("")
   const [searchPending, setSearchPending] = useState(false)
 
@@ -173,11 +180,11 @@ function BlockSheetContent({
         <section className="flex flex-col gap-1.5">
           {editingContent ? (
             <Textarea
+              ref={contentRef}
               value={content}
               onChange={(e) => setContent(e.target.value)}
               className="min-h-32"
               aria-label="Treść bloku"
-              autoFocus
             />
           ) : (
             <>

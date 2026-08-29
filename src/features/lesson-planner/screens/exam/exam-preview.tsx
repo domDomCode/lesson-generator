@@ -22,7 +22,7 @@ function TaskBody({ task }: { task: ExamTask }) {
     return (
       <ul className="space-y-1">
         {(task.options ?? []).map((option, i) => (
-          <li key={i} className="text-sm">
+          <li key={option} className="text-sm">
             {formatOption(option, i)}
           </li>
         ))}
@@ -32,8 +32,8 @@ function TaskBody({ task }: { task: ExamTask }) {
   if (task.type === "match") {
     return (
       <div className="grid grid-cols-2 gap-x-6 gap-y-1.5">
-        {(task.pairs ?? []).map((pair, i) => (
-          <Fragment key={i}>
+        {(task.pairs ?? []).map((pair) => (
+          <Fragment key={`${pair.left}=${pair.right}`}>
             <span className="text-sm">{pair.left}</span>
             <span className="text-sm text-muted-foreground">{pair.right}</span>
           </Fragment>
