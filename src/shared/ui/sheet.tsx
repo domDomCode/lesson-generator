@@ -35,7 +35,7 @@ function SheetContent({
     <DialogPrimitive.Portal data-slot="sheet-portal">
       <DialogPrimitive.Overlay
         data-slot="sheet-overlay"
-        className="fixed inset-0 z-50 bg-black/40 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0"
+        className="fixed inset-0 z-50 bg-black/40 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=open]:fade-in-0 data-[state=closed]:fade-out-0 data-[state=open]:duration-300 data-[state=closed]:duration-200"
       />
       <DialogPrimitive.Content
         data-slot="sheet-content"
@@ -47,7 +47,7 @@ function SheetContent({
           // `left-1/2` (not `inset-x-*`) on purpose — tailwind-merge treats
           // `inset-x-*` and `left-*` as the same conflict group, so pairing
           // them here would silently drop one of the two.
-          "md:top-1/2 md:right-auto md:bottom-auto md:left-1/2 md:mx-0 md:max-h-[85vh] md:w-[calc(100%-2rem)] md:max-w-[640px] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-xl md:data-[state=open]:slide-in-from-bottom-0 md:data-[state=closed]:slide-out-to-bottom-0 md:data-[state=open]:fade-in-0 md:data-[state=closed]:fade-out-0 md:data-[state=open]:zoom-in-95 md:data-[state=closed]:zoom-out-95 md:data-[state=open]:duration-200",
+          "md:top-1/2 md:right-auto md:bottom-auto md:left-1/2 md:mx-0 md:max-h-[85vh] md:w-[calc(100%-2rem)] md:max-w-[640px] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-xl md:data-[state=open]:slide-in-from-bottom-0 md:data-[state=closed]:slide-out-to-bottom-0 md:data-[state=open]:fade-in-0 md:data-[state=closed]:fade-out-0 md:data-[state=open]:zoom-in-95 md:data-[state=closed]:zoom-out-95 md:data-[state=open]:duration-200 md:data-[state=closed]:duration-150",
           className
         )}
         {...props}

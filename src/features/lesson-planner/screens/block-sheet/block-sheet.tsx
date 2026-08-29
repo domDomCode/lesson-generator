@@ -83,12 +83,30 @@ interface BlockSheetProps {
 
 export function BlockSheet({ blockId, onOpenChange }: BlockSheetProps) {
   const doc = usePlannerStore(selectVisibleDoc)
-  const block = blockId != null ? (doc?.blocks.find((b) => b.id === blockId) ?? null) : null
+  const liveBlock = blockId != null ? (doc?.blocks.find((b) => b.id === blockId) ?? null) : null
+
+  // `blockId` clears the instant dismissal starts, which would rip the sheet
+  // out before it can animate. Keep the last block mounted through the close
+  // transition, then drop it.
+  const [shownBlock, setShownBlock] = useState(liveBlock)
+  if (liveBlock && liveBlock !== shownBlock) {
+    setShownBlock(liveBlock)
+  }
+  useEffect(() => {
+    if (liveBlock) return
+    const timer = window.setTimeout(() => setShownBlock(null), 360)
+    return () => window.clearTimeout(timer)
+  }, [liveBlock])
 
   return (
     <Sheet open={blockId != null} onOpenChange={onOpenChange}>
-      {doc && block && (
-        <BlockSheetContent key={block.id} doc={doc} block={block} onOpenChange={onOpenChange} />
+      {doc && shownBlock && (
+        <BlockSheetContent
+          key={shownBlock.id}
+          doc={doc}
+          block={shownBlock}
+          onOpenChange={onOpenChange}
+        />
       )}
     </Sheet>
   )
